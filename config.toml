@@ -1,0 +1,49 @@
+baseURL = "http://jankeyfu.github.io/"
+languageCode = "zh-cn"
+defaultContentLanguage = "zh-cn"
+title = "温故知新以为师"
+theme = "mainroad"
+toc = true
+pygmentsCodefences = true
+pygmentsCodefencesGuessSyntax = true
+pygmentsStyle = "friendly"
+disqusShortname = "blog-tayaemm0rn" 
+
+[Author]
+  name = "Jankeyfu"
+  bio = "某不知名公司的某不知名程序员！"
+  avatar = "img/avatar.png"
+
+[Params]
+  subtitle = "Keep Learning & Keep Thinking" # Subtitle of your site
+  description = "Recode something" # Description of your site
+  opengraph = true
+  twitter_cards = false
+  comments = true
+  readmore = true # Show "Read more" button in list if true
+  authorbox = true
+  post_navigation = true
+  post_meta = ["date", "categories"] # Order of post meta information
+
+[Params.sidebar]
+  home = "right"   # Configure layout for home page
+  list = "right"   # Configure layout for list pages
+  single = "right" # Configure layout for single pages
+  # Enable widgets in given order
+  widgets = ["search", "recent", "categories", "taglist", "social", "languages"]
+
+[Params.widgets]
+  recent_num = 5 # Set the number of articles in the "Recent articles" widget
+  tags_counter = true # Enable counter for each tag in "Tags" widget (disabled by default)
+
+[Params.widgets.social]
+  # Enable parts of social widget
+  # facebook = "username"
+  # twitter = "username"
+  # instagram = "username"
+  # linkedin = "username"
+  # telegram = "username"
+  github = "jankeyfu"
+  # gitlab = "username"
+  # bitbucket = "username"
+  # email = "example@example.com"
