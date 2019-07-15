@@ -8,6 +8,7 @@ pygmentsCodefences = true
 pygmentsCodefencesGuessSyntax = true
 pygmentsStyle = "friendly"
 disqusShortname = "blog-tayaemm0rn" 
+googleAnalytics = "UA-143764367-1"
 
 [Author]
   name = "Jankeyfu"

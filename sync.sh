@@ -13,8 +13,8 @@ function syncGit(){
     if [ $cnt -eq 0 ];then
         echo "\033[32mstart sync:$1\033[0m"
         git add .
-        # git commit -m $2
-        # git push
+        git commit -m "$2"
+        git push
     else
         echo "\033[31mnothing to commit:$1"
     fi
