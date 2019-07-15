@@ -15,6 +15,7 @@ function syncGit(){
         git add .
         git commit -m "$2"
         git push
+        echo "\033[32msync over:$1\033[0m"
     else
         echo "\033[31mnothing to commit:$1"
     fi
