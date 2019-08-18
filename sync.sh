@@ -20,6 +20,6 @@ function syncGit(){
         echo "\033[31mnothing to commit:$1"
     fi
 }
-
+hugo -D
 syncGit ~/blog "$msg"
 syncGit ~/blog/public "$msg"
