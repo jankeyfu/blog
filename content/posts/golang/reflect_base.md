@@ -73,7 +73,6 @@ type D struct {
 - **NumField() int** : 获取结构变量字段数量，如结构体 D 有两个字段 I 和 S
 - **Field(i int) StructField** : 通过索引获取结构体变量的字段，其返回值是`reflect.StructField`类型的变量。
 - **FieldByName(name string) (StructField, bool)**: 通过名称获取结构体变量，如果对应名称的字段变量不存在，则返回false。
-
 - **FieldByNameFunc(match func(string) bool) (StructField, bool)**：通过一个匹配方法来获取匹配的结构体字段变量，需要自定义 `match` 方法
 
 ```go
@@ -119,16 +118,23 @@ type StructField struct {
 - **In(i int) Type** : 返回第i个参数的反射类型
 - **NumOut() int** : 返回方法返回值个数
 - **Out(i int) Type** :返回第i个返回值的反射类型
+- **NumMethod() int** : 返回struct的方法数量
+- **Method(int) Method** : 通过索引获取反射Method类型对象
+- **MethodByName(string) (Method, bool)** : 通过方法名称获取反射Method类型对象
 
 ```go
 func TpDemo3() {
 	ft := reflect.TypeOf(Add)
 	fmt.Printf("func_param_num:%d 1st_param:%s 2nd_param:%s\n", ft.NumIn(), ft.In(0), ft.In(1))
-	fmt.Printf("func_return_num:%d 1st_return:%s", ft.NumOut(), ft.Out(0))
+	fmt.Printf("func_return_num:%d 1st_return:%s\n", ft.NumOut(), ft.Out(0))
+	mt := reflect.TypeOf(&D{I: 10})
+	m, _ := mt.MethodByName("Print")
+	fmt.Printf("struct method_num:%d method_name_by_id:%s method_name_by_name:%s", mt.NumMethod(), mt.Method(0).Name, m.Name)
 }
 // output
 // func_param_num:2 1st_param:int 2nd_param:int
 // func_return_num:1 1st_return:int
+// struct method_num:1 method_name_by_id:Print method_name_by_name:Print
 ```
 
 **4. 其他类型**：其他数据类型如slice，array，map，ptr 的类型反射
@@ -166,3 +172,151 @@ func TpDemo4() {
 ```
 
 ##### Value
+
+Go语言中的 Type 的反射主要用来判断变量类型，而 Value 反射则可以获取变量值，以及更改变量值。
+
+**1. 值反射类型**：值的反射类型通过`reflect.ValueOf()`来获取。具体使用方式见后续介绍
+
+**2. 变量类型转换** ：主要是获取反射对象的实际变量值并进行类型转换
+
+- **Int() int64** : 将 Value 对象中存储的值转换为 int64类型的，只有在底层数据类型为 ` Int, Int8, Int16, Int32, or Int64` 才可以调用，否则会 panic。
+- **String() string** : 获取 Value 对象中存储的值转换为 string类型，当底层数据类型不是String 时，不会报错，但是会返回一个类似的字符串`<int Value>`，其中`int`以底层数据类型是`int`为例，如果是其他类型的则显示为其他类型字符串。
+- **Float() float64** : 转换为 float64 类型的数据，只支持底层数据类型是 float32 和 float64。
+- **Slice(i, j int) Value** : 如果底层数据是 slice 或者 array，可以通过此方法获取数据内容，类似于 `slice[i:j]`。
+- **Slice3(i, j, k int) Value** : 类似于 `slice[i : j : k]` , i 起始下标，j 终止下标，k 表示slice的容量大小。
+- **Bytes() []byte** : 返回 byte 切片，只支持底层数据类型为 `[]byte`
+- **Len() int** : 返回slice 的长度
+- **Cap() int** : 返回 slice 的容量
+
+```go
+func VDemo() {
+	i := 10
+	s := "s"
+	f := 10.2
+	slice := []int{1, 2, 3, 4, 5}
+	iv := reflect.ValueOf(i)
+	sv := reflect.ValueOf(s)
+	fv := reflect.ValueOf(f)
+	slicev := reflect.ValueOf(slice)
+	bv := reflect.ValueOf(true)
+	fmt.Printf("i:%d s:%s f:%.2f slice:%v bool:%v\n", iv.Int(), sv.String(), fv.Float(), slicev.Slice(0, slicev.Len()), bv.Bool())
+}
+// output 
+// i:10 s:s f:10.20 slice:[1 2 3 4 5] bool:true 
+```
+
+**3. 变量类型map**：由于map的比较复杂，就单独提出来讲解了。
+
+- **MapKeys() []Value** : 返回 map 的键列表
+- **MapIndex(key Value) Value** : 根据 map 的键获取值
+- **MapRange() *MapIter** : 获取 map 的迭代器，通过 `Next()` 方法遍历获取 map 的 k_v entry
+
+```go
+func VDemo2() {
+	mp := map[string]string{"A": "a", "B": "b", "C": "c"}
+	mpv := reflect.ValueOf(mp)
+	fmt.Println(mpv.MapKeys())
+	for iter := mpv.MapRange(); iter.Next(); {
+		fmt.Printf("%s:%s ", iter.Key(), iter.Value())
+	}
+	fmt.Println()
+	for _, key := range mpv.MapKeys() {
+		fmt.Printf("%s:%s ", key, mpv.MapIndex(key))
+	}
+}
+// output
+// [A B C]
+// A:a B:b C:c 
+// A:a B:b C:c 
+```
+
+**4. 地址相关**：
+
+- **CanAddr() bool** : 通过`reflect.ValueOf` 获取到的 `Value` 对象都是不可取地址的，只有指针或者 interface 调用 `Elem() `方法后才可取地址。
+- **Elem() Value** : 获取原始变量指针所指向的位置，只有底层数据是指针和interface才能调用此方法。
+
+- **Addr() Value** : 只有 CanAddr 才能获取到 Value对象的地址
+- **CanInterface() bool** : 是否可以调用 `Interface()` 方法，只有不可导出的字段变量返回false
+- **Interface() (i interface{})** : 将底层数据转换为 `interface{}` 类型的变量，结构体中的不可导出变量会panic
+
+```go
+func VDemo3() {
+	i := 10
+	iv := reflect.ValueOf(i)
+	slicev := reflect.ValueOf([]int{1, 2, 3})
+	dv := reflect.ValueOf(D{I: 10, u: "u"})
+	pv := reflect.ValueOf(&i)
+	fv := reflect.ValueOf(Add)
+	fmt.Printf("addr slice:%t int:%t struct:%t ptr:%t  func:%t\n", slicev.CanAddr(), iv.CanAddr(), dv.CanAddr(), pv.CanAddr(), fv.CanAddr())
+	fmt.Printf("addr ptr_elem:%t addr:%v\n", pv.Elem().CanAddr(), pv.Elem().Addr())
+	fmt.Printf("unexpored_field:%t other:%t", dv.FieldByName("u").CanInterface(), iv.CanInterface())
+}
+// output
+// addr slice:false int:false struct:false ptr:false  func:false
+// addr ptr_elem:true addr:0xc000016098
+// unexpored_field:false other:true
+```
+
+**变量赋值**：主要用来设置哪些可以取地址的变量的内容
+
+- **CanSet() bool** : 是否可以修改底层数据内容，只有可去地址的变量才可修改值
+- **SetInt(x int64)** : 设置 CanSet 变量的值为int64，下列其他方法都死设置为不同类型的数据，不再赘述，一般用来修改struct 中的字段和map中的字段值。
+- **SetUint(x uint64)**
+- **SetBool(x bool)**
+- **SetBytes(x []byte)**
+- **SetFloat(x float64)**
+- **SetLen(n int)**
+- **SetCap(n int)**
+- **SetString(x string)**
+- **SetMapIndex(key, val Value)**
+
+```go
+func VDemo4() {
+	dv := reflect.ValueOf(&D{I: 10})
+	dv.Elem().FieldByName("I").SetInt(11)
+	fmt.Printf("%+v\n", dv)
+}
+// output
+&{I:11 S: u:}
+```
+
+**方法调用**：
+
+- **Call(in []Value) []Value** : 反射方法的调用，方法的参数分别是 in[0], in[1] ...
+- **CallSlice(in []Value) []Value** : 首先原方法必须是可变参数方法，可变参数对应 in数组中的最后一个元素，最后一个元素必须是与原方法定义参数类型相同的slice 。
+
+```go
+func VDemo5() {
+	fv := reflect.ValueOf(Add)
+	fvs := reflect.ValueOf(Print)
+	// Add(10, 11) = 21
+	ret := fv.Call([]reflect.Value{reflect.ValueOf(10), reflect.ValueOf(11)})
+	fmt.Println(ret[0])
+
+	fvs.CallSlice([]reflect.Value{reflect.ValueOf([]int{1, 2, 3})})
+
+	dv := reflect.ValueOf(&D{I: 10, S: "s", u: "u"})
+	dv.Method(0).Call([]reflect.Value{})
+}
+
+// Print ...
+func Print(v ...int) {
+	fmt.Println(v)
+}
+// output
+// 21
+// [1 2 3]
+// i:10 s:s u:u
+```
+
+**Type Value通用API** : 这些API在Type 和 Value 中的用法一致，唯一的不同是返回值的类型一个是 Type 一个 Value
+
+- **NumMethod() int**
+- **Method(i int) Value**
+- **MethodByName(name string) Value**
+- **NumField() int**
+- **Field(i int) Value**
+- **FieldByName(name string) Value**
+- **FieldByNameFunc(match func(string) bool) Value**
+- **Kind() Kind**
+- **Type() Type**
