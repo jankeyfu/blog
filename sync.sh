@@ -21,5 +21,6 @@ function syncGit(){
     fi
 }
 hugo -D
-syncGit ~/blog "$msg"
+# 先sync submodule
 syncGit ~/blog/public "$msg"
+syncGit ~/blog "$msg"
