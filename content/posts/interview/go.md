@@ -5,7 +5,7 @@ draft: true
 categories:
     - 面试
 tags:
-    - go
+    - golang
 ---
 
 > 本文是长期维护的Go相关的笔试面试题合集

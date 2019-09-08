@@ -5,14 +5,14 @@ draft: true
 categories:
     - "随笔"
 tags:
-    - "感悟"
+    - "thinking"
 ---
 
 不知不觉毕业已过一年，却发现自己还是老样子，总觉得自己的进步不那么满意却一直在逃避，不愿正视，所以也是时候好好地反思过去，开启新征途了。
 
 <!--more-->
 
-![](https://cdn.sinaimg.cn.52ecy.cn/large/005BYqpgly1g4zfjubucbj30zk0k0423.jpg)
+![](https://jankeyfu-blog.oss-cn-beijing.aliyuncs.com/zelda.jpg)
 
 
 

@@ -33,8 +33,75 @@ tags:
 |   filtered    |   被条件过滤的比例   |
 |     Extra     |    查询的额外信息    |
 
-##### id
+#### id
 
 查询标识，标识查询的顺序，次字段可能为空，当有`Union`联合查询的时候，有一行数据中的id将会是空，表示是从联合数据`<unionM,N>`中查询。id相同时执行顺序自上而下。
 
 ![image-20190826205614663](/img/image-20190826205614663-6824289.png)
+
+#### select_type
+
+| select_type  |                    解释                    |
+| :----------: | :----------------------------------------: |
+|    simple    |         不使用 `union` 或者子查询          |
+|   primary    |     最外层查询：union 的第一层查询...      |
+|    union     | union 查询中第二个查询的表或者之后查询的表 |
+| union_result |        union 查询中间过程的联合结果        |
+
+#### type
+
+- **system** 官方文档介绍说当表中只有一行数据的时候，显示的连接类型即为 `system` ，但是在实际测试中，一致没有出现，我的 `MySQL server` 版本是 `5.7.26`。
+
+- **const** 查询结果只有一条数据，一般是使用 `primary key` 或者 `unique key` 进行查询时为这种连接类型，`const` 查询类型非常快。
+
+  ```mysql
+  -- id为primary key
+  EXPLAIN SELECT * FROM employee WHERE id = 1;
+  ```
+
+
+- **eq_ref** 在连接查询中，使用连接表中某一张表的主键或者非空唯一建作为主键进行查询，每一次只会从前面的表中读取一行数据。（ps：一般是前一张表的数据查询结果比当前表的多）
+
+  ```mysql
+  -- e.code 为unique_key
+  EXPLAIN SELECT * FROM employee_extend ee 
+  JOIN  employee e on e.CODE = ee.CODE
+  ```
+
+- **ref** 在连接查询中，使用当前表的索引字段查询联合数据中的项。
+
+  ```mysql
+  -- e.department_id 为普通key
+  EXPLAIN SELECT * FROM employee e 
+  JOIN employee_extend ee ON e.CODE = ee.CODE
+  WHERE e.department_id = 2
+  ```
+
+- **fulltext** 在连接查询中，使用全文索引字段查询数据
+
+  ```mysql
+  -- introduction 为fulltext索引
+  EXPLAIN SELECT * FROM employee WHERE match(introduction) against ("王五*" in boolean mode)
+  ```
+
+- **range** 使用索引的区间进行数据筛选，如 `IN` , `BETWEEN a AND b`, 
+
+  ```mysql
+  -- department_id 为索引字段
+  EXPLAIN SELECT * FROM employee WHERE department_id in(1,2)
+  ```
+
+- **index** 全索引字段扫描，通常出现在查询的字段为索引字段且不包含查询条件的情况，和 all 进行全表扫描类型，但是索引字段数量通常比全表数据要小得多，除了唯一索引。
+
+  ```mysql
+  -- id 为primary_key
+  EXPLAIN SELECT id FROM employee
+  ```
+
+- **all** 全表扫描，如果第一张表的查询方式是 all，这是非常不合适的，有严重的性能问题，需要增加索引进行优化。
+
+  ```mysql
+  -- name 为非索引字段
+  EXPLAIN SELECT * FROM employee WHERE NAME = '张三'
+  ```
+
