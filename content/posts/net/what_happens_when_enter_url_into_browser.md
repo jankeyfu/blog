@@ -14,7 +14,7 @@ tags:
 
 整个过程可以总结为下图，主要涉及的三个大步骤，浏览器，DNS服务器，以及目标网址对应的服务相关内容。
 
-![整体流程图](http://puxk2buqs.bkt.clouddn.com/browser.svg)
+![整体流程图](https://jankeyfu-blog.oss-cn-beijing.aliyuncs.com/http_browser.svg)
 
 ##### 缓存
 
@@ -26,7 +26,7 @@ tags:
 
 由于所有的HTTP请求都是基于TCP/IP协议栈的，所以要发起HTTP请求就必须知道目标服务器的IP地址，因此通过获取域名对应的IP地址是必不可少的。
 
-![缓存流程图](http://puxk2buqs.bkt.clouddn.com/http_cache.svg)
+![缓存流程图](https://jankeyfu-blog.oss-cn-beijing.aliyuncs.com/http_cache.svg)
 
 - **浏览器DNS缓存**：一般浏览器会记住一些dns的信息，以便提升浏览器的速度。因此当访问一个网站的时候，如果浏览器缓存有其对应的IP地址，则可以直接取来使用。
 - **系统DNS缓存**：通常也就是我们hosts文件中配置的域名与IP的映射关系，当浏览器中没有对应的域名关联关系时，则会去查询系统的hosts配置文件，寻找网址对应的IP地址。
@@ -38,7 +38,7 @@ tags:
 
 当获取到IP地址之后，则可以向服务器发起网络请求了，请求流程图如下
 
-![http请求流程图](http://puxk2buqs.bkt.clouddn.com/http_tcp.svg)
+![http请求流程图](https://jankeyfu-blog.oss-cn-beijing.aliyuncs.com/http_tcp.svg)
 
 - **建立网络连接**：http协议是基于TCP/IP协议族的应用层协议，因此在进行通信需要建立连接，也就TCP三次握手。
 
