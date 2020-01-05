@@ -6,6 +6,7 @@ categories:
     - 源码
 tags:
     - golang
+    - src
 ---
 
 最近在看 zap 相关的源码，里面用到了很多的 sync.Pool 来优化内存使用，于是花了点时间研究了下。
