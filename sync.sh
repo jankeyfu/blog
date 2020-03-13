@@ -14,7 +14,7 @@ function syncGit(){
         echo "\033[32mstart sync:$1\033[0m"
         git add .
         git commit -m "$2"
-        git push
+        git push --no-verify
         echo "\033[32msync over:$1\033[0m"
     else
         echo "\033[31mnothing to commit:$1"
