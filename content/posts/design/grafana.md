@@ -3,7 +3,7 @@ title: "Prometheus + Grafana 配置系统监控"
 date: 2019-10-27T14:43:13+08:00
 draft: true
 categories:
-    - 架构
+    - 设计
 tags:
     - monitor
 ---

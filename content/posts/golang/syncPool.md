@@ -3,10 +3,9 @@ title: "Sync.Pool 对象重用利器"
 date: 2019-12-29T16:04:06+08:00
 draft: true
 categories:
-    - 源码
-tags:
     - golang
-    - src
+tags:
+    - sync
 ---
 
 最近在看 zap 相关的源码，里面用到了很多的 sync.Pool 来优化内存使用，于是花了点时间研究了下。

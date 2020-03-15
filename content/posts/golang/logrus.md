@@ -3,10 +3,9 @@ title: "Logrus"
 date: 2019-08-23T18:03:32+08:00
 draft: true
 categories:
-    - 源码
+    - golang
 tags:
     - log
-    - golang
 ---
 
 logrus是Go语言编写的结构化日志工具，拥有丰富的日志API，支持自定义格式输出同时也支持hook操作，是目前比较流行的Go语言日志记录工具。

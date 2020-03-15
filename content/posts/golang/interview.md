@@ -1,10 +1,8 @@
 ---
-title: "Go"
+title: "Go 面试要点"
 date: 2019-08-18T22:17:58+08:00
 draft: true
 categories:
-    - 面试
-tags:
     - golang
 ---
 

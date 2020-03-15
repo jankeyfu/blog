@@ -3,9 +3,8 @@ title: "Go Channel"
 date: 2020-03-14T15:43:06+08:00
 draft: true
 categories:
-    - 语言
-tags:
     - golang
+tags:
     - channel
 ---
 
