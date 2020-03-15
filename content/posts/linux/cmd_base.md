@@ -1,5 +1,5 @@
 ---
-title: "linux基础命令"
+title: "Linux 基础命令"
 date: 2019-09-26T17:30:41+08:00
 draft: true
 categories:

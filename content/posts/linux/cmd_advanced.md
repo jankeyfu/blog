@@ -1,5 +1,5 @@
 ---
-title: "linux进阶命令"
+title: "Linux 进阶命令"
 date: 2019-09-26T17:51:19+08:00
 draft: true
 categories:
