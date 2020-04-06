@@ -125,7 +125,7 @@ find path -name file_name # 查找path路径下名为file_name的文件，文件
 **grep 文件内容查找命令**
 
 ```shell
-grep [param] patten file_name # 查找文件中指定的内容所在的那一行
+grep [params] patten file_name # 查找文件中指定的内容所在的那一行
 -n 		# 显示查找内容的行号,如果后面加了数字则表示将匹配行上下各n行的内容展示
 -u 		# 忽略大小写
 -r dir	# 递归查找dir目录下所有文件中与所需查找的内容匹配的行
@@ -164,7 +164,7 @@ chgrp -R group_name dir	# 修改文件夹下所有文件的所属用户组
 **useradd 新增用户**
 
 ```shell
-useradd [param] user_name	# 创建一个名为user_name的用户
+useradd [params] user_name	# 创建一个名为user_name的用户
 -u uid			# 设定用户ID
 -g group_name	# 在某个用户组下创建一个用户
 -c comment		# 用户的描述信息

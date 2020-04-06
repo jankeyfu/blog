@@ -27,6 +27,8 @@ googleAnalytics = "UA-143764367-1"
   post_meta = ["date", "categories"] # Order of post meta information
   busuanzi = true
   busuanzi_site_offset = 1563197709
+  toc = true
+  dateformat = "2006-01-02"
 
 [Params.sidebar]
   home = "right"   # Configure layout for home page

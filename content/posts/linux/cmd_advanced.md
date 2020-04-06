@@ -8,12 +8,109 @@ tags:
     - shell
 ---
 
-##### 文件查找命令 find
+除了前面提到的基本的 linux 命令之外，还有一些功能强大的其它命令，学习这些命令，能够有效提升我们的开发效率。
+
+<!--more-->
+
+#### 文件查找命令 find
+
+find 命令用于查找指定的文件，可以按照文件大小、文件名称、文件类型等进行查找，具体用法如下所示：
 
 ```shell
-find path -options
+find path [params]
 
--name file_name		#精确匹配
--iname file_name 	#不区分大小写精确匹配 
+-name file_name		# 精确匹配，文件名可以包含通配符 *
+-iname file_name 	# 不区分大小写精确匹配 
+-type file_type		# 查找指定类型的文件，类型可以是 d 目录、f 文件、s socket 等
+-size n 			# 查找指定大小的文件，+1k 表示超过 1k 的文件，-1k 表示小于 1k 的文件，单位可以是K、M、G
 ```
+
+#### 内容查找命令 grep
+
+grep 命令用于查找文件中符合指定条件的内容，默认情况下显示指定内容所在行的数据。
+
+```shell
+grep [params] patten path
+-v	# 显示不匹配的内容行
+-An	# 显示匹配行的后 n 行
+-Bn	# 显示匹配行的前 n 行
+-Cn	# 显示匹配行的前后各 n 行
+-c	# 显示匹配次数
+-E	# 使用扩展的正则表达式，如 +、?、()、| 等 
+-i	# 忽略大小进行匹配
+-n	# 显示匹配行的行号
+-r	# 递归查询目录中的所有文件内容是否包含匹配内容，等同于 -d recurse
+-w	# 只有全字符匹配才算匹配
+```
+
+#### 内容修改命令 sed
+
+sed 命令主要用于批量修改文件中的内容。
+
+```shell
+sed [params] path
+-e script 				# 以脚本方式修改文件内容（ e 可以省略）
+-i 						# 在原文件中修改内容
+-n 						# 只输出执行的结果
+sed -i '' patten file	# 按照指定的 patten 修改 file 文件中的内容
+```
+
+sed 的脚本和 vim 的修改命令类似，接下来我们看看一些常用的脚本动作有哪些：
+
+**1、增加 a**
+
+```shell
+sed '3a\xxxx' file	 	# 在文件的第三行之后增加（也就是第四行） xxxx 内容
+sed '3a xxxx' file		# 空格和\等价
+```
+
+**2、删除 d**
+
+```shell
+sed '3d' file 		# 删除第三行的内容
+sed '3,5d' file 	# 删除第 3 到 5 行（闭区间，即 3，4，5 行均会被删除）的内容
+sed '3,$d' file		# 删除第 3 行到最后一行的内容
+```
+
+**3、插入 i**
+
+```shell
+sed '2i 222' file	# 在第二行插如 222 一个新行
+```
+
+**4、替换 c**
+
+```shell
+sed '2c 2222' file # 替换第二行内容为 222
+```
+
+**5、显示指定内容 p**
+
+```shell
+sed -n '7p' file # 只显示第七行内容，如果没有 n 参数，会在最后显示文件所有内容
+```
+
+**6、搜索并（删除、打印、替换）**
+
+```shell
+sed '/a/d' file			# 查找包含 a 的行并将其删除
+sed -n '/a/p' file 		# 查找包含字符 a 的内容并显示，等价于 grep 操作
+sed 's/old/new/g' file	# 查找全部旧字符 old 并将其替换为 new，g 表示替换所有
+```
+
+**7、在原文件上修改**
+
+上面提到的命令都是将修改后的内容输出到标准输出，而接下里的命令是会将修改后的内容写入到文件中，需要特别注意。
+
+```shell
+sed -i 's/old/new/g' file	# 查找全部旧字符 old 并将其替换为 new，g 表示替换所有
+```
+
+值得注意的一点是，在 macos 系统上，需要多加一个参数`''`，否认会报错 `sed: 1: "a.txt": command a expects \ followed by text`
+
+```shell
+sed -i '' 's/old/new/g' file
+```
+
+
 

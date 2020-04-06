@@ -12,7 +12,7 @@ function changeUpdateTime(){
     do 
         if [[ $file == content/posts/* ]];
         then
-            echo $file
+            # echo $file
             changeFileLastmod $file
         fi
     done
@@ -23,7 +23,7 @@ function changeFileLastmod(){
     file="$1"
     time=`date '+%Y-%m-%dT%H:%M:%S+08:00'`
     reg="s/lastmod.*/lastmod: $time/"
-    echo "sed -i '' $reg $file"
+    # echo "sed -i '' $reg $file"
     sed -i '' "$reg" "$file"
 }
 
