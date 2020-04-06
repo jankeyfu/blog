@@ -1,6 +1,7 @@
 ---
 title: "Linux 基础命令"
 date: 2019-09-26T17:30:41+08:00
+lastmod: 2020-04-06T16:56:49+08:00
 draft: true
 categories:
     - linux

@@ -13,7 +13,12 @@ function changeUpdateTime(){
         if [[ $file == content/posts/* ]];
         then
             # echo $file
-            changeFileLastmod $file
+            cnt=`grep lastmod $file |wc -l`
+            if [[ $cnt -ge 1 ]];then
+                changeFileLastmod $file
+            else
+                addLastmod $file
+            fi
         fi
     done
 }
@@ -25,6 +30,16 @@ function changeFileLastmod(){
     reg="s/lastmod.*/lastmod: $time/"
     # echo "sed -i '' $reg $file"
     sed -i '' "$reg" "$file"
+}
+
+function addLastmod(){
+    file="$1"
+    time=`date '+%Y-%m-%dT%H:%M:%S+08:00'`
+    reg="lastmod: $time"
+    # echo "sed -i '' $reg $file"
+    sed -i '' "3a\\
+    $reg
+    " "$file"
 }
 
 function syncGit(){
