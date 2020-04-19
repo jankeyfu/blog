@@ -1,7 +1,7 @@
 ---
 title: "MySQL EXPLAIN"
 date: 2019-08-26T10:07:21+08:00
-lastmod: 2020-04-05T22:21:12+08:00
+lastmod: 2020-04-19T18:01:43+08:00
 draft: true
 categories:
     - 数据库
@@ -92,7 +92,7 @@ tags:
   EXPLAIN SELECT * FROM employee WHERE department_id in(1,2)
   ```
 
-- **index** 全索引字段扫描，通常出现在查询的字段为索引字段且不包含查询条件的情况，和 all 进行全表扫描类型，但是索引字段数量通常比全表数据要小得多，除了唯一索引。
+- **index** 全索引字段扫描，通常出现在查询的字段为索引字段且不包含查询条件的情况，和 all 进行全表扫描类似，但是索引字段数量通常比全表数据要小得多，除了唯一索引。
 
   ```mysql
   -- id 为primary_key
