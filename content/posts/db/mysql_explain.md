@@ -1,7 +1,7 @@
 ---
 title: "MySQL EXPLAIN"
 date: 2019-08-26T10:07:21+08:00
-lastmod: 2020-04-19T18:01:43+08:00
+lastmod: 2020-04-20T22:28:23+08:00
 draft: true
 categories:
     - 数据库
@@ -106,3 +106,6 @@ tags:
   EXPLAIN SELECT * FROM employee WHERE NAME = '张三'
   ```
 
+#### 参考资料
+
+- https://dev.mysql.com/doc/refman/8.0/en/explain-output.html
