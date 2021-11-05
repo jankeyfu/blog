@@ -3,4 +3,4 @@
 	url = https://github.com/vimux/mainroad
 [submodule "public"]
 	path = public
-	url = https://github.com/jankeyfu/jankeyfu.github.io.git
+	url = git@github.com:jankeyfu/jankeyfu.github.io.git
