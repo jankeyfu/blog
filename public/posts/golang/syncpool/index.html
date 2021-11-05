@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Sync.Pool 对象重用利器 - 温故知新以为师</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="Sync.Pool 对象重用利器" />
+<meta property="og:description" content="最近在看 zap 相关的源码，里面用到了很多的 sync.Pool 来优化内存使用，于是花了点时间研究了下。
+sync.Pool 是一组可以单独保存和检索的临时对象，之所以称其保存的是临时对象是因为在下一次 GC 的时候，池中对象会被清理，且被清理时不会得到任何通知，因此池中不适合存放数据库连接等持久对象。sync.Pool 的主要用途是存储已分配内存但却不再使用的对象，以供后续重用此对象，减少内存分配产生的碎片垃圾回收，提升性能。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://jankeyfu.github.io/posts/golang/syncpool/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2019-12-29T16:04:06+08:00" />
+<meta property="article:modified_time" content="2019-12-29T16:04:06+08:00" />
+
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-143764367-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+	
+
+<script async src="//cdn.busuanzi.ibruce.info/cdn/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script>
+    $(document).ready(function() {
+        var int = setInterval(fixCount, 100);
+        var busuanziSiteOffset =  1563197709 
+        function fixCount() {
+            if ($("#busuanzi_container_site_pv").css("display") != "none") {
+                clearInterval(int);
+                $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + busuanziSiteOffset);
+            }
+        }
+    });
+</script>
+
+
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="温故知新以为师" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">温故知新以为师</div>
+					<div class="logo__tagline">Keep Learning &amp; Keep Thinking</div>
+				</div>
+		</a>
+	</div>
+		<div class="divider"></div>
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Sync.Pool 对象重用利器</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">Jankeyfu</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2019-12-29T16:04:06&#43;08:00">2019-12-29</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/golang/" rel="category">golang</a>
+	</span>
+</div></div>
+		</header>
+		
+<div class="post__toc toc">
+	<div class="toc__title">目录</div>
+	<div class="toc__menu">
+		<nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+	</div>
+</div><div class="content post__content clearfix">
+			<p>最近在看 zap 相关的源码，里面用到了很多的 sync.Pool 来优化内存使用，于是花了点时间研究了下。</p>
+<p><code>sync.Pool</code> 是一组可以单独保存和检索的<strong>临时对象</strong>，之所以称其保存的是临时对象是因为在下一次 GC 的时候，池中对象会被清理，且被清理时不会得到任何通知，因此池中不适合存放数据库连接等持久对象。<code>sync.Pool </code>的主要用途是存储已分配内存但却不再使用的对象，以供后续重用此对象，减少内存分配产生的碎片垃圾回收，提升性能。</p>
+<h4 id="用法">用法</h4>
+<p>首先我们了解下 sync.Pool 的用法，其实 sync.Pool 很简单，只需要三步即可搞定：</p>
+<ol>
+<li>
+<p>创建一个 sync.Pool ，只需要定义其字段 New 即可，这是一个方法，主要作用是当池中无可用对象的时候，可以创建一个对象以供使用</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#007020;font-weight:bold">var</span> pool = <span style="color:#666">&amp;</span>sync.Pool{
+	New: <span style="color:#007020;font-weight:bold">func</span>() <span style="color:#007020;font-weight:bold">interface</span>{} {
+		<span style="color:#007020;font-weight:bold">return</span> <span style="color:#666">&amp;</span>S{}
+	},
+}
+</code></pre></div></li>
+<li>
+<p>当需要获取对象的时候使用 <code>Get</code> 方法即可，然后再将其转换为所需要的类型</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">obj <span style="color:#666">:=</span> pool.<span style="color:#06287e">Get</span>().(<span style="color:#666">*</span>S)
+</code></pre></div></li>
+<li>
+<p>回收获取的对象，使用 <code>Put</code> 方法，可以将对象放回池中，以供后续使用。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">pool.<span style="color:#06287e">Put</span>(obj)
+</code></pre></div></li>
+</ol>
+<p>接下来看一个例子，看看 sync.Pool 在性能提升上有多大的用途。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#007020;font-weight:bold">func</span> <span style="color:#06287e">BenchmarkNoPool</span>(b <span style="color:#666">*</span>testing.B) {
+	b.<span style="color:#06287e">ResetTimer</span>()
+	<span style="color:#007020;font-weight:bold">var</span> tmp <span style="color:#666">*</span>S
+	<span style="color:#007020;font-weight:bold">for</span> i <span style="color:#666">:=</span> <span style="color:#40a070">0</span>; i &lt; b.N; i<span style="color:#666">++</span> {
+		tmp = <span style="color:#666">&amp;</span>S{}
+	}
+	_ = tmp
+}
+<span style="color:#007020;font-weight:bold">func</span> <span style="color:#06287e">BenchmarkWithPool</span>(b <span style="color:#666">*</span>testing.B) {
+	<span style="color:#007020;font-weight:bold">var</span> pool = <span style="color:#666">&amp;</span>sync.Pool{
+		New: <span style="color:#007020;font-weight:bold">func</span>() <span style="color:#007020;font-weight:bold">interface</span>{} {
+			<span style="color:#007020;font-weight:bold">return</span> <span style="color:#666">&amp;</span>S{}
+		},
+	}
+	b.<span style="color:#06287e">ResetTimer</span>()
+	<span style="color:#007020;font-weight:bold">var</span> tmp <span style="color:#666">*</span>S
+	<span style="color:#007020;font-weight:bold">for</span> i <span style="color:#666">:=</span> <span style="color:#40a070">0</span>; i &lt; b.N; i<span style="color:#666">++</span> {
+		tmp = pool.<span style="color:#06287e">Get</span>().(<span style="color:#666">*</span>S)
+		pool.<span style="color:#06287e">Put</span>(tmp)
+	}
+	_ = tmp
+}
+
+<span style="color:#007020;font-weight:bold">type</span> S <span style="color:#007020;font-weight:bold">struct</span> {
+	s <span style="color:#902000">string</span>
+}
+</code></pre></div><p>通过对上述代码进行 <code>Benchmark</code> 得到下列结果：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">BenchmarkNoPool-4     	39317407	        27.8 ns/op	      <span style="color:#40a070">16</span> B/op	       <span style="color:#40a070">1</span> allocs/op
+BenchmarkWithPool-4   	69199653	        16.2 ns/op	       <span style="color:#40a070">0</span> B/op	       <span style="color:#40a070">0</span> allocs/op
+</code></pre></div><p>由此看出，sync.Pool 在能够减少内存分配，而且，数据结构体越大，性能提升效果越明显，感兴趣的同学可以将结构体 <code>S</code> 进行扩展，增加新的字段，会得到更加明显的提升效果。</p>
+<p><strong>sync.Pool 是如何实现的呢？每个 P 都有独享的的缓存池，当 g 进行 sync.Pool 操作的时候，会先找到对应 P 的缓存池的 private 对象；如果没有对象可用，则加锁从 shared 切片中取一个可用对象；如果仍然没有可用对象，则会从别的 P 对应的池中偷取；如果还是没有，则使用 New 方法创建一个新对象。</strong></p>
+<h4 id="结构体分析">结构体分析</h4>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#007020;font-weight:bold">type</span> Pool <span style="color:#007020;font-weight:bold">struct</span> {
+	noCopy     noCopy
+	local      unsafe.Pointer <span style="color:#60a0b0;font-style:italic">// local fixed-size per-P pool, actual type is [P]poolLocal
+</span><span style="color:#60a0b0;font-style:italic"></span>	localSize  <span style="color:#902000">uintptr</span>        <span style="color:#60a0b0;font-style:italic">// size of the local array
+</span><span style="color:#60a0b0;font-style:italic"></span>	victim     unsafe.Pointer <span style="color:#60a0b0;font-style:italic">// local from previous cycle
+</span><span style="color:#60a0b0;font-style:italic"></span>	victimSize <span style="color:#902000">uintptr</span>        <span style="color:#60a0b0;font-style:italic">// size of victims array
+</span><span style="color:#60a0b0;font-style:italic"></span>	New        <span style="color:#007020;font-weight:bold">func</span>() <span style="color:#007020;font-weight:bold">interface</span>{}
+}
+
+<span style="color:#007020;font-weight:bold">type</span> poolLocalInternal <span style="color:#007020;font-weight:bold">struct</span> {
+	private <span style="color:#007020;font-weight:bold">interface</span>{} <span style="color:#60a0b0;font-style:italic">// Can be used only by the respective P.
+</span><span style="color:#60a0b0;font-style:italic"></span>	shared  poolChain   <span style="color:#60a0b0;font-style:italic">// Local P can pushHead/popHead; any P can popTail.
+</span><span style="color:#60a0b0;font-style:italic"></span>}
+
+<span style="color:#007020;font-weight:bold">type</span> poolLocal <span style="color:#007020;font-weight:bold">struct</span> {
+	poolLocalInternal
+
+	<span style="color:#60a0b0;font-style:italic">// Prevents false sharing on widespread platforms with
+</span><span style="color:#60a0b0;font-style:italic"></span>	<span style="color:#60a0b0;font-style:italic">// 128 mod (cache line size) = 0 .
+</span><span style="color:#60a0b0;font-style:italic"></span>	pad [<span style="color:#40a070">128</span> <span style="color:#666">-</span> unsafe.<span style="color:#06287e">Sizeof</span>(poolLocalInternal{})<span style="color:#666">%</span><span style="color:#40a070">128</span>]<span style="color:#902000">byte</span>
+}
+</code></pre></div><ul>
+<li>
+<p>Pool 结构体对外只暴露了 <code>New</code> 这个字段，是池中无可用对象时申请内存创建新对象的方法；</p>
+</li>
+<li>
+<p>local 其实是每个 P 对应的缓冲池 (poolLocal) 切片，可用通过每个 P 的序号索引获取；</p>
+</li>
+<li>
+<p>poolLocalInternal.private 就是每个缓冲池中的私有对象，只允许被当前 P 所获取</p>
+</li>
+<li>
+<p>poolLocalInternal.shared 这个是当前 P 所持有的公共对象列表，可用被当前 P 所获取，也能被其他的 P 获取。</p>
+</li>
+</ul>
+<h4 id="获取对象">获取对象</h4>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#007020;font-weight:bold">func</span> (p <span style="color:#666">*</span>Pool) <span style="color:#06287e">Get</span>() <span style="color:#007020;font-weight:bold">interface</span>{} {
+	l, pid <span style="color:#666">:=</span> p.<span style="color:#06287e">pin</span>()
+	x <span style="color:#666">:=</span> l.private
+	l.private = <span style="color:#007020;font-weight:bold">nil</span>
+	<span style="color:#007020;font-weight:bold">if</span> x <span style="color:#666">==</span> <span style="color:#007020;font-weight:bold">nil</span> {
+		x, _ = l.shared.<span style="color:#06287e">popHead</span>()
+		<span style="color:#007020;font-weight:bold">if</span> x <span style="color:#666">==</span> <span style="color:#007020;font-weight:bold">nil</span> {
+			x = p.<span style="color:#06287e">getSlow</span>(pid)
+		}
+	}
+	<span style="color:#06287e">runtime_procUnpin</span>()
+	<span style="color:#007020;font-weight:bold">if</span> x <span style="color:#666">==</span> <span style="color:#007020;font-weight:bold">nil</span> <span style="color:#666">&amp;&amp;</span> p.New <span style="color:#666">!=</span> <span style="color:#007020;font-weight:bold">nil</span> {
+		x = p.<span style="color:#06287e">New</span>()
+	}
+	<span style="color:#007020;font-weight:bold">return</span> x
+}
+</code></pre></div><p>为了让代码看起来更加简单明了，此处只保留了部分核心代码。获取对象的操作如下：</p>
+<ul>
+<li>首先通过 p.pin() 方法获取当前 goroutine 对应的 P 所对应的 poolLocal 对象以及 P 的id</li>
+<li>然后从当前 P 的poolLocal 对象中获取 private 对象，由于同一时刻一个 P 只会有一个 groutine 执行，所以此处不需要加锁。</li>
+<li>如果 private 为 nil ，则从取出 shared 切片头部一个对象，如果仍然为空，则通过 getSlow 方法从别的 P 的缓存池中偷取一个对象。</li>
+<li>如果仍未获取到可用对象，则通过 New 方法创建一个新对象。</li>
+</ul>
+<h4 id="缓存对象">缓存对象</h4>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#007020;font-weight:bold">func</span> (p <span style="color:#666">*</span>Pool) <span style="color:#06287e">Put</span>(x <span style="color:#007020;font-weight:bold">interface</span>{}) {
+	<span style="color:#007020;font-weight:bold">if</span> x <span style="color:#666">==</span> <span style="color:#007020;font-weight:bold">nil</span> {
+		<span style="color:#007020;font-weight:bold">return</span>
+	}
+	l, _ <span style="color:#666">:=</span> p.<span style="color:#06287e">pin</span>()
+	<span style="color:#007020;font-weight:bold">if</span> l.private <span style="color:#666">==</span> <span style="color:#007020;font-weight:bold">nil</span> {
+		l.private = x
+		x = <span style="color:#007020;font-weight:bold">nil</span>
+	}
+	<span style="color:#007020;font-weight:bold">if</span> x <span style="color:#666">!=</span> <span style="color:#007020;font-weight:bold">nil</span> {
+		l.shared.<span style="color:#06287e">pushHead</span>(x)
+	}
+	<span style="color:#06287e">runtime_procUnpin</span>()
+}
+</code></pre></div><p>缓存对象则和获取对象的流程相反，流程如下</p>
+<ul>
+<li>如果存入对象为 nil ，则直接返回</li>
+<li>获取当前 goroutine 所属的 P 的 LocalPool 对象，如果其 private 对象为 nil ，则将此赋值给 private</li>
+<li>如果 private 对象非空，则将此对象存入 shared 切片的头部</li>
+</ul>
+<h4 id="引用">引用</h4>
+<ul>
+<li><a href="http://xiaorui.cc/2019/06/12/golang%E6%96%B0%E7%89%88%E5%A6%82%E4%BD%95%E4%BC%98%E5%8C%96sync-pool%E9%94%81%E7%AB%9E%E4%BA%89%E6%B6%88%E8%80%97%EF%BC%9F/">golang新版如何优化sync.pool锁竞争消耗？</a></li>
+</ul>
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/sync/" rel="tag">sync</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="Jankeyfu avatar" src="/img/avatar.png" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 Jankeyfu</span>
+	</div>
+	<div class="authorbox__description">
+		某不知名公司的某不知名程序员！
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/design/grafana/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">Prometheus &#43; Grafana 配置系统监控</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/posts/algorithm/bloom_filter/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">布隆过滤器（Bloom Filter）</p>
+		</a>
+	</div>
+</nav>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/design/grafana/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">Prometheus &#43; Grafana 配置系统监控</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/posts/algorithm/bloom_filter/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">布隆过滤器（Bloom Filter）</p>
+		</a>
+	</div>
+</nav>
+<div id="git-comments"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+    const gitalk = new Gitalk({
+        clientID: '828d851e2cca8472fff7',
+        clientSecret: '8010aa440c2565f5fd290194be72ed211584a952',
+        repo: 'jankeyfu.github.io',
+        owner: 'jankeyfu',
+        admin: ['jankeyfu'],
+        id: location.pathname,      
+        distractionFreeMode: false  
+    })
+    gitalk.render('git-comments')
+</script>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="http://jankeyfu.github.io/" />
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/db/mysql_query_optimization/">MySQL 查询优化</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/db/mysql_transaction/">MySQL 事务</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/db/mysql_index/">MySQL 索引</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/db/mysql_interview/">MySQL 知识要点</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/linux/cmd_awk/">Linux 命令之 AWK</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/docker/">docker</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/golang/">golang</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/linux/">linux</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E8%AE%BE%E8%AE%A1/">设计</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E9%98%85%E8%AF%BB/">阅读</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/cache/" title="cache">cache (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/channel/" title="channel">channel (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/context/" title="context">context (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/design/" title="design">design (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/docker/" title="docker">docker (2)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/http/" title="http">http (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/interview/" title="interview">interview (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/log/" title="log">log (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/monitor/" title="monitor">monitor (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/mysql/" title="mysql">mysql (5)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/reading/" title="reading">reading (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/redis/" title="redis">redis (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/reflect/" title="reflect">reflect (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/shell/" title="shell">shell (4)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/sort/" title="sort">sort (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/sync/" title="sync">sync (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/thinking/" title="thinking">thinking (1)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/jankeyfu" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 温故知新以为师.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+		<span id="busuanzi_container_site_pv">
+			本站总访问量<span id="busuanzi_value_site_pv"></span>次
+		</span>
+		<span id="busuanzi_container_site_pv">
+			本页总访问量<span id="busuanzi_value_page_pv"></span>次
+		</span>
+		<span id="busuanzi_container_site_uv">
+			本站访客数<span id="busuanzi_value_site_uv"></span>人次
+		</span>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

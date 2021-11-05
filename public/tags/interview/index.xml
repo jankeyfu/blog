@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>interview on 温故知新以为师</title>
+    <link>http://jankeyfu.github.io/tags/interview/</link>
+    <description>Recent content in interview on 温故知新以为师</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 14 Apr 2020 21:51:50 +0800</lastBuildDate><atom:link href="http://jankeyfu.github.io/tags/interview/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL 知识要点</title>
+      <link>http://jankeyfu.github.io/posts/db/mysql_interview/</link>
+      <pubDate>Tue, 14 Apr 2020 21:51:50 +0800</pubDate>
+      
+      <guid>http://jankeyfu.github.io/posts/db/mysql_interview/</guid>
+      <description>&lt;p&gt;在日常开发过程中，有很多 MySQL 的基础要点会忽略，此文主要记录一些比较容易忽略的知识要点，或是提供一些常见问题的解决方案。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

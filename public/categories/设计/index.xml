@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>设计 on 温故知新以为师</title>
+    <link>http://jankeyfu.github.io/categories/%E8%AE%BE%E8%AE%A1/</link>
+    <description>Recent content in 设计 on 温故知新以为师</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 27 Oct 2019 14:43:13 +0800</lastBuildDate><atom:link href="http://jankeyfu.github.io/categories/%E8%AE%BE%E8%AE%A1/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Prometheus &#43; Grafana 配置系统监控</title>
+      <link>http://jankeyfu.github.io/posts/design/grafana/</link>
+      <pubDate>Sun, 27 Oct 2019 14:43:13 +0800</pubDate>
+      
+      <guid>http://jankeyfu.github.io/posts/design/grafana/</guid>
+      <description>&lt;p&gt;最近上线系统出了一些问题，但是上完线之后都没有发现，直到外围报出问题去定位才解决。因此想着是不是应该给系统加上监控和报警，以便能够在系统出现问题的第一时间去解决。于是去研究了一波&lt;code&gt;prometheus + grafana&lt;/code&gt;相关的资料。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>LRU 缓存设计</title>
+      <link>http://jankeyfu.github.io/posts/design/lru/</link>
+      <pubDate>Thu, 05 Sep 2019 10:23:56 +0800</pubDate>
+      
+      <guid>http://jankeyfu.github.io/posts/design/lru/</guid>
+      <description>&lt;p&gt;LRU ( Least Recently Used ) ：见名知意，即最近最少使用，这是一种常见的缓存策略，当缓存数据超过缓存容量时，将最近最少使用的数据项从缓存中去除以便能够存储新的数据。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

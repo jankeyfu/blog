@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>排序算法集合 - 温故知新以为师</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="排序算法集合" />
+<meta property="og:description" content="排序算法可以说是算法中最基础的，但是一直以来都没有系统地去整理过，而且其中有些细节还是值得好好推敲的，因此把遇到过的排序算法进行整理了一下。目前整理地还不够全面，后续会继续慢慢完善。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://jankeyfu.github.io/posts/algorithm/sort/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2019-09-14T12:29:17+08:00" />
+<meta property="article:modified_time" content="2019-09-14T12:29:17+08:00" />
+
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-143764367-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+	
+
+<script async src="//cdn.busuanzi.ibruce.info/cdn/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script>
+    $(document).ready(function() {
+        var int = setInterval(fixCount, 100);
+        var busuanziSiteOffset =  1563197709 
+        function fixCount() {
+            if ($("#busuanzi_container_site_pv").css("display") != "none") {
+                clearInterval(int);
+                $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + busuanziSiteOffset);
+            }
+        }
+    });
+</script>
+
+
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="温故知新以为师" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">温故知新以为师</div>
+					<div class="logo__tagline">Keep Learning &amp; Keep Thinking</div>
+				</div>
+		</a>
+	</div>
+		<div class="divider"></div>
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">排序算法集合</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">Jankeyfu</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2019-09-14T12:29:17&#43;08:00">2019-09-14</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/%E7%AE%97%E6%B3%95/" rel="category">算法</a>
+	</span>
+</div></div>
+		</header>
+		
+<div class="post__toc toc">
+	<div class="toc__title">目录</div>
+	<div class="toc__menu">
+		<nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+	</div>
+</div><div class="content post__content clearfix">
+			<p>排序算法可以说是算法中最基础的，但是一直以来都没有系统地去整理过，而且其中有些细节还是值得好好推敲的，因此把遇到过的排序算法进行整理了一下。目前整理地还不够全面，后续会继续慢慢完善。</p>
+<h4 id="1-冒泡排序">1. 冒泡排序</h4>
+<p>冒泡排序就是通过比较相邻两数大小，以前小后大的的规则，如不满足则交换两者位置，继续比较下一组相邻两数，以此将最大数由前慢慢移动到后面的一种排序算法，由于大的数是一点点移动到最后面的，所以称为冒泡排序。</p>
+<p>可以用以下场景来理解：在一队乱序排列的人中，只有左边的人知道自己比右边的人高或者低，由左边的人决定两人是否交换位置，然后从左到右进行比较，此时可以得出此队最高的人会站在最右边。之后用此方法选出次高，第三高&hellip;的人，即可完成队列的由低到高的排序。下列图片只做了一次比较，后续循环太多就不展示了。</p>
+<p><img src="https://jankeyfu-blog.oss-cn-beijing.aliyuncs.com/bubble_sort.png" alt="image-20190914133032790"></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#007020;font-weight:bold">func</span> <span style="color:#06287e">BubbleSort</span>(s []<span style="color:#902000">int</span>) []<span style="color:#902000">int</span> {
+	<span style="color:#007020;font-weight:bold">for</span> i <span style="color:#666">:=</span> <span style="color:#40a070">0</span>; i &lt; <span style="color:#007020">len</span>(s)<span style="color:#666">-</span><span style="color:#40a070">1</span>; i<span style="color:#666">++</span> {
+		<span style="color:#007020;font-weight:bold">for</span> j <span style="color:#666">:=</span> <span style="color:#40a070">0</span>; j &lt; <span style="color:#007020">len</span>(s)<span style="color:#666">-</span>i<span style="color:#666">-</span><span style="color:#40a070">1</span>; j<span style="color:#666">++</span> {
+			<span style="color:#007020;font-weight:bold">if</span> s[j] &gt; s[j<span style="color:#666">+</span><span style="color:#40a070">1</span>] {
+				s[j], s[j<span style="color:#666">+</span><span style="color:#40a070">1</span>] = s[j<span style="color:#666">+</span><span style="color:#40a070">1</span>], s[j]
+			}
+		}
+	}
+	<span style="color:#007020;font-weight:bold">return</span> s
+}
+</code></pre></div><h4 id="2-选择排序">2. 选择排序</h4>
+<p>选择排序是在数组范围内先找出最小的数，放置在第一个位置，再从剩下数中找出最小的数，放在第二个位置，以此类推，直到最后一个数放置在数组的最后一个位置。</p>
+<p><img src="https://jankeyfu-blog.oss-cn-beijing.aliyuncs.com/selection_sort.png" alt="image-20190914133239746"></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#007020;font-weight:bold">func</span> <span style="color:#06287e">SelectionSort</span>(s []<span style="color:#902000">int</span>) []<span style="color:#902000">int</span> {
+	<span style="color:#007020;font-weight:bold">for</span> i <span style="color:#666">:=</span> <span style="color:#40a070">0</span>; i &lt; <span style="color:#007020">len</span>(s)<span style="color:#666">-</span><span style="color:#40a070">1</span>; i<span style="color:#666">++</span> {
+		minIdx <span style="color:#666">:=</span> i
+		<span style="color:#007020;font-weight:bold">for</span> j <span style="color:#666">:=</span> i <span style="color:#666">+</span> <span style="color:#40a070">1</span>; j &lt; <span style="color:#007020">len</span>(s); j<span style="color:#666">++</span> {
+			<span style="color:#007020;font-weight:bold">if</span> s[minIdx] &gt; s[j] {
+				minIdx = j
+			}
+		}
+		<span style="color:#007020;font-weight:bold">if</span> i <span style="color:#666">!=</span> minIdx {
+			s[i], s[minIdx] = s[minIdx], s[i]
+		}
+	}
+	<span style="color:#007020;font-weight:bold">return</span> s
+}
+</code></pre></div><h4 id="3-插入排序">3. 插入排序</h4>
+<p>插入排序类似于我们打扑克，将数组分为两部分，左半部分是已排序数列，右半部分是未排序的，从未排序的数列中取出第一个数，依次与其左边的数进行比较，当比左边的数小时，将其左边的数向右移动一位，直到比左边数大的时候，将其插入。</p>
+<p><img src="https://jankeyfu-blog.oss-cn-beijing.aliyuncs.com/insertion_sort.png" alt="image-20190914150923774"></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#007020;font-weight:bold">func</span> <span style="color:#06287e">InsertionSort</span>(s []<span style="color:#902000">int</span>) []<span style="color:#902000">int</span> {
+	<span style="color:#007020;font-weight:bold">var</span> left <span style="color:#902000">int</span>
+	<span style="color:#007020;font-weight:bold">for</span> i <span style="color:#666">:=</span> <span style="color:#40a070">1</span>; i &lt; <span style="color:#007020">len</span>(s); i<span style="color:#666">++</span> {
+		left = i <span style="color:#666">-</span> <span style="color:#40a070">1</span>
+		current <span style="color:#666">:=</span> s[i]
+		<span style="color:#007020;font-weight:bold">for</span> left <span style="color:#666">&gt;=</span> <span style="color:#40a070">0</span> <span style="color:#666">&amp;&amp;</span> current &lt; s[left] {
+			s[left<span style="color:#666">+</span><span style="color:#40a070">1</span>] = s[left]
+			left<span style="color:#666">--</span>
+		}
+		s[left<span style="color:#666">+</span><span style="color:#40a070">1</span>] = current
+	}
+	<span style="color:#007020;font-weight:bold">return</span> s
+}
+</code></pre></div><h4 id="4-归并排序">4. 归并排序</h4>
+<p>归并排序的核心思想是是将两个已经排好序的数组进行合并，以达到最终有序的状态。如何得到两个排好序的数组就是需要将数组进行拆分，从单个元素开始合并，得到多个有序的长度为2的数组，然后再继续合并得到多个有序的长度为4的数组，主要通过递归的方式进行处理，将数组逐级折半拆解，直到元素为一个进行合并处理。</p>
+<p><img src="https://jankeyfu-blog.oss-cn-beijing.aliyuncs.com/merge_sort.png" alt="image-20190914191216497"></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#60a0b0;font-style:italic">// l一般为0，表示s的起始元素下标，r表示slice s的最后一个元素下标
+</span><span style="color:#60a0b0;font-style:italic"></span><span style="color:#007020;font-weight:bold">func</span> <span style="color:#06287e">MergeSort</span>(s []<span style="color:#902000">int</span>, l <span style="color:#902000">int</span>, r <span style="color:#902000">int</span>) []<span style="color:#902000">int</span> {
+	<span style="color:#60a0b0;font-style:italic">// 说明此时只有一个元素，达到有序状态了
+</span><span style="color:#60a0b0;font-style:italic"></span>  <span style="color:#007020;font-weight:bold">if</span> l <span style="color:#666">&gt;=</span> r {
+		<span style="color:#007020;font-weight:bold">return</span> s
+	}
+	m <span style="color:#666">:=</span> (l <span style="color:#666">+</span> r) <span style="color:#666">/</span> <span style="color:#40a070">2</span> <span style="color:#60a0b0;font-style:italic">// 折半拆解
+</span><span style="color:#60a0b0;font-style:italic"></span>	<span style="color:#06287e">MergeSort</span>(s, l, m) 
+	<span style="color:#06287e">MergeSort</span>(s, m<span style="color:#666">+</span><span style="color:#40a070">1</span>, r)
+	<span style="color:#007020;font-weight:bold">return</span> <span style="color:#06287e">merge</span>(s, l, m, r) <span style="color:#60a0b0;font-style:italic">// 合并拆解的流程
+</span><span style="color:#60a0b0;font-style:italic"></span>}
+
+<span style="color:#60a0b0;font-style:italic">// 对已排序数组进行合并排序
+</span><span style="color:#60a0b0;font-style:italic"></span><span style="color:#007020;font-weight:bold">func</span> <span style="color:#06287e">merge</span>(s []<span style="color:#902000">int</span>, l, m, r <span style="color:#902000">int</span>) []<span style="color:#902000">int</span> {
+	ls <span style="color:#666">:=</span> <span style="color:#007020">make</span>([]<span style="color:#902000">int</span>, m<span style="color:#666">-</span>l<span style="color:#666">+</span><span style="color:#40a070">1</span>)
+	rs <span style="color:#666">:=</span> <span style="color:#007020">make</span>([]<span style="color:#902000">int</span>, r<span style="color:#666">-</span>m)
+	<span style="color:#007020">copy</span>(ls, s[l:m<span style="color:#666">+</span><span style="color:#40a070">1</span>])
+	<span style="color:#007020">copy</span>(rs, s[m<span style="color:#666">+</span><span style="color:#40a070">1</span>:r<span style="color:#666">+</span><span style="color:#40a070">1</span>])
+
+	lsIdx, rsIdx, sIdx <span style="color:#666">:=</span> <span style="color:#40a070">0</span>, <span style="color:#40a070">0</span>, l
+  <span style="color:#60a0b0;font-style:italic">// 两数组均未排序完
+</span><span style="color:#60a0b0;font-style:italic"></span>	<span style="color:#007020;font-weight:bold">for</span> lsIdx &lt; <span style="color:#007020">len</span>(ls) <span style="color:#666">&amp;&amp;</span> rsIdx &lt; <span style="color:#007020">len</span>(rs) {
+		<span style="color:#007020;font-weight:bold">if</span> ls[lsIdx] &lt; rs[rsIdx] {
+			s[sIdx] = ls[lsIdx]
+			lsIdx<span style="color:#666">++</span>
+		} <span style="color:#007020;font-weight:bold">else</span> {
+			s[sIdx] = rs[rsIdx]
+			rsIdx<span style="color:#666">++</span>
+		}
+		sIdx<span style="color:#666">++</span>
+	}
+  <span style="color:#60a0b0;font-style:italic">// rs数组排序完，只需将ls数组补充到后面即可
+</span><span style="color:#60a0b0;font-style:italic"></span>	<span style="color:#007020;font-weight:bold">for</span> lsIdx &lt; <span style="color:#007020">len</span>(ls) {
+		s[sIdx] = ls[lsIdx]
+		lsIdx<span style="color:#666">++</span>
+		sIdx<span style="color:#666">++</span>
+	}
+  <span style="color:#60a0b0;font-style:italic">// ls数组排序完，只需将rs数组元素补充到数组后面
+</span><span style="color:#60a0b0;font-style:italic"></span>	<span style="color:#007020;font-weight:bold">for</span> rsIdx &lt; <span style="color:#007020">len</span>(rs) {
+		s[sIdx] = rs[rsIdx]
+		rsIdx<span style="color:#666">++</span>
+		sIdx<span style="color:#666">++</span>
+	}
+	<span style="color:#007020;font-weight:bold">return</span> s
+}
+</code></pre></div><h4 id="5快速排序">5.快速排序</h4>
+<p>快速排序是依据数组中的一个元素，将数组划分为两部分，比ta他小的在左边，比它大的在右边，然后通过分治的方式，不断缩减划分范围，以得到最终有序的数组。</p>
+<p>快速排序的核心就是对数组进行划分，主要维护两个指针，一个指针遍历未排序数组，一个指针作为与对比数大小的分界线。</p>
+<p><strong>第一步</strong>：原始数组为<code>[3, 5, 2, 4, 1]</code> 以最后一个元素 1 为比较对象，发现前面没有一个比 1小的数字，分界指针未移动，一致在第一个位置，所以最后互调分界指针和 1 的位置</p>
+<p><strong>第二步</strong>：将数组进行拆分，元素 1 之前的为一部分， 之后的为一部分，对剩余的 <code>[5, 2, 4, 3]</code>，继续进行划分，以最后一个元素 3 作为分界依据，第一个元素 5 比 3 大，分界指针不移动，第二个元素 2 比 3 小，需要将第二个元素与分界元素进行互换，即 2 5 交换，然后分界指针向前移动，后续的 4 也比三大，不需要处理，最终得到的顺序是 <code>[2 ,3, 4, 5]</code></p>
+<p><strong>第三步</strong>：继续划分，按照3的位置划分为两部分，一部分是 <code>[2]</code> 另一部分是 <code>[4, 5]</code>, 重复第二步，</p>
+<p><strong>第四步</strong>：所有拆分到最细粒度的数组都不需要再拆分了，则数组达到有序状态。</p>
+<p><img src="https://jankeyfu-blog.oss-cn-beijing.aliyuncs.com/quick_sort.png" alt="image-20190915140440026"></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#60a0b0;font-style:italic">// QuickSort 快速排序
+</span><span style="color:#60a0b0;font-style:italic"></span><span style="color:#007020;font-weight:bold">func</span> <span style="color:#06287e">QuickSort</span>(s []<span style="color:#902000">int</span>, l, r <span style="color:#902000">int</span>) []<span style="color:#902000">int</span> {
+	<span style="color:#007020;font-weight:bold">if</span> l <span style="color:#666">&gt;=</span> r {
+		<span style="color:#007020;font-weight:bold">return</span> s
+	}
+	sep <span style="color:#666">:=</span> <span style="color:#06287e">partition</span>(s, l, r)
+	s = <span style="color:#06287e">QuickSort</span>(s, l, sep<span style="color:#666">-</span><span style="color:#40a070">1</span>)
+	s = <span style="color:#06287e">QuickSort</span>(s, sep<span style="color:#666">+</span><span style="color:#40a070">1</span>, r)
+	<span style="color:#007020;font-weight:bold">return</span> s
+}
+
+<span style="color:#60a0b0;font-style:italic">// 将区间s[l,r]进行划分
+</span><span style="color:#60a0b0;font-style:italic"></span><span style="color:#007020;font-weight:bold">func</span> <span style="color:#06287e">partition</span>(s []<span style="color:#902000">int</span>, l, r <span style="color:#902000">int</span>) <span style="color:#902000">int</span> {
+	<span style="color:#60a0b0;font-style:italic">// 作为划分的界限判断值
+</span><span style="color:#60a0b0;font-style:italic"></span>	sep <span style="color:#666">:=</span> s[r]
+	<span style="color:#60a0b0;font-style:italic">// 划分界限的索引
+</span><span style="color:#60a0b0;font-style:italic"></span>	sepIdx <span style="color:#666">:=</span> l
+	<span style="color:#007020;font-weight:bold">for</span> i <span style="color:#666">:=</span> l; i &lt; r; i<span style="color:#666">++</span> {
+		<span style="color:#007020;font-weight:bold">if</span> s[i] &lt; sep {
+			s[sepIdx], s[i] = s[i], s[sepIdx]
+			sepIdx<span style="color:#666">++</span>
+		}
+	}
+	s[sepIdx], s[r] = s[r], s[sepIdx]
+	<span style="color:#007020;font-weight:bold">return</span> sepIdx
+}
+</code></pre></div><h4 id="6-堆排序">6. 堆排序</h4>
+<p>堆排序是以通过维护最大堆和最小堆的方式，对数组进行排序的一种算法。</p>
+<blockquote>
+<p>最大堆：父节点比子节点都要大的堆</p>
+<p>最小堆：父节点比子节点都要小的堆</p>
+<p>堆：可以近似理解为完全二叉树</p>
+</blockquote>
+<p><strong>最大堆的维护</strong>：这是堆排序的算法核心，是为了确保当前节点的数值比子节点的数值要大。主要由函数 <code>maxHeapify</code> 维护，其主要算法逻辑如下：寻找当前节点和其子节点中最大的数，将其与当前节点交换，并继续确保被交换的节点仍然满足最大堆规则。</p>
+<p>如下图所示，对于根节点 2 而言，它不是所有节点中的最大值，所以不满足最大堆的规则，在它和它的子节点中找到最大值，设置为父节点，得到图二；但是此时2号这个节点依旧不满足最大堆规则，继续上述流程，将 2 与 4进行交换，最终得到一个最大堆。</p>
+<p><img src="https://jankeyfu-blog.oss-cn-beijing.aliyuncs.com/heap_sort_heapify.png" alt="image-20190915152230758"></p>
+<p><strong>最大堆构建</strong>：有了最大堆的维护逻辑，我们就可以将数组转化为一个最大堆了，只需要从叶子节点的父节点开始，慢慢到根节点，不断地进行最大堆的维护即可得到一个最大堆。</p>
+<p><img src="https://jankeyfu-blog.oss-cn-beijing.aliyuncs.com/heap_sort_build.png" alt="image-20190915153352128"></p>
+<p><strong>堆排序</strong>：堆排序就是将最大堆堆顶元素与最后一个元素进行交换，继续维护从堆顶到倒数第二个元素间的最大堆操作。由此将每次得到的最大堆的堆顶元素提取出来，即可得到有序列表了。</p>
+<p><img src="https://jankeyfu-blog.oss-cn-beijing.aliyuncs.com/heap_sort.png" alt="image-20190915154222494"></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#60a0b0;font-style:italic">// HeapSort 堆排序
+</span><span style="color:#60a0b0;font-style:italic"></span><span style="color:#007020;font-weight:bold">func</span> <span style="color:#06287e">HeapSort</span>(s []<span style="color:#902000">int</span>) []<span style="color:#902000">int</span> {
+	<span style="color:#06287e">buildMaxHeap</span>(s)
+	heapSize <span style="color:#666">:=</span> <span style="color:#007020">len</span>(s)
+	<span style="color:#007020;font-weight:bold">for</span> i <span style="color:#666">:=</span> <span style="color:#007020">len</span>(s) <span style="color:#666">-</span> <span style="color:#40a070">1</span>; i <span style="color:#666">&gt;=</span> <span style="color:#40a070">0</span>; i<span style="color:#666">--</span> {
+		<span style="color:#60a0b0;font-style:italic">// 第一个节点为未排序列表最大数，防止在未排序数组最后一个位置
+</span><span style="color:#60a0b0;font-style:italic"></span>		s[i], s[<span style="color:#40a070">0</span>] = s[<span style="color:#40a070">0</span>], s[i]
+		<span style="color:#60a0b0;font-style:italic">// 此时堆的大小需要减1，防止在维护最大堆的时候，将已排好序的数据打乱
+</span><span style="color:#60a0b0;font-style:italic"></span>		heapSize<span style="color:#666">--</span>
+		<span style="color:#60a0b0;font-style:italic">// 每次都从根节点开始重新维护一个最大堆
+</span><span style="color:#60a0b0;font-style:italic"></span>		<span style="color:#06287e">maxHeapify</span>(s, heapSize, <span style="color:#40a070">0</span>)
+	}
+	<span style="color:#007020;font-weight:bold">return</span> s
+}
+
+<span style="color:#60a0b0;font-style:italic">// 最大堆的构建：实则为从叶子节点的父节点开始不断维护最大堆，直到根节点，完成最大堆的构建
+</span><span style="color:#60a0b0;font-style:italic"></span><span style="color:#007020;font-weight:bold">func</span> <span style="color:#06287e">buildMaxHeap</span>(s []<span style="color:#902000">int</span>) {
+	<span style="color:#007020;font-weight:bold">for</span> i <span style="color:#666">:=</span> <span style="color:#007020">len</span>(s)<span style="color:#666">/</span><span style="color:#40a070">2</span> <span style="color:#666">-</span> <span style="color:#40a070">1</span>; i <span style="color:#666">&gt;=</span> <span style="color:#40a070">0</span>; i<span style="color:#666">--</span> {
+		<span style="color:#06287e">maxHeapify</span>(s, <span style="color:#007020">len</span>(s), i)
+	}
+}
+
+<span style="color:#60a0b0;font-style:italic">// 最大堆的维护，以确保父节点比子节点都要大
+</span><span style="color:#60a0b0;font-style:italic">// 前提：只有 i 节点不满足最大堆的要求，其余节点都满足
+</span><span style="color:#60a0b0;font-style:italic"></span><span style="color:#007020;font-weight:bold">func</span> <span style="color:#06287e">maxHeapify</span>(s []<span style="color:#902000">int</span>, heapSize, i <span style="color:#902000">int</span>) {
+	l <span style="color:#666">:=</span> <span style="color:#06287e">left</span>(i)
+	r <span style="color:#666">:=</span> <span style="color:#06287e">right</span>(i)
+	largestIdx <span style="color:#666">:=</span> i
+	<span style="color:#60a0b0;font-style:italic">// 寻找父子节点中的最大值
+</span><span style="color:#60a0b0;font-style:italic"></span>	<span style="color:#007020;font-weight:bold">if</span> l &lt; heapSize <span style="color:#666">&amp;&amp;</span> s[l] &gt; s[largestIdx] {
+		largestIdx = l
+	}
+	<span style="color:#007020;font-weight:bold">if</span> r &lt; heapSize <span style="color:#666">&amp;&amp;</span> s[r] &gt; s[largestIdx] {
+		largestIdx = r
+	}
+	<span style="color:#007020;font-weight:bold">if</span> largestIdx <span style="color:#666">!=</span> i {
+		s[i], s[largestIdx] = s[largestIdx], s[i]
+		<span style="color:#60a0b0;font-style:italic">// 因为当前节点变更，后续不一定满足最大堆，需要继续判断处理
+</span><span style="color:#60a0b0;font-style:italic"></span>		<span style="color:#06287e">maxHeapify</span>(s, heapSize, largestIdx)
+	}
+}
+
+<span style="color:#60a0b0;font-style:italic">// 根节点从0开始，左子节点索引：2 * i + 1
+</span><span style="color:#60a0b0;font-style:italic"></span><span style="color:#007020;font-weight:bold">func</span> <span style="color:#06287e">left</span>(i <span style="color:#902000">int</span>) <span style="color:#902000">int</span> {
+	<span style="color:#007020;font-weight:bold">return</span> <span style="color:#40a070">2</span><span style="color:#666">*</span>i <span style="color:#666">+</span> <span style="color:#40a070">1</span>
+}
+
+<span style="color:#60a0b0;font-style:italic">// 根节点从0开始，右子节点索引：2 * (i + 1)
+</span><span style="color:#60a0b0;font-style:italic"></span><span style="color:#007020;font-weight:bold">func</span> <span style="color:#06287e">right</span>(i <span style="color:#902000">int</span>) <span style="color:#902000">int</span> {
+	<span style="color:#007020;font-weight:bold">return</span> <span style="color:#40a070">2</span> <span style="color:#666">*</span> (i <span style="color:#666">+</span> <span style="color:#40a070">1</span>)
+}
+</code></pre></div><h4 id="7-计数排序">7. 计数排序</h4>
+<p>计数排序就是对于一个元素均为 0~k 之间的数组，采用一个长度为 k 的数组，以原数组数值作为计数数组的索引下标，记录排序数组中每个元素的出现次数，再依据出现次数，对此数组次数进行位置索引，最后将原数组按照计数数组中的索引进行重新排序的一种排序算法。</p>
+<p>具体流程如下：</p>
+<ul>
+<li>原数组 [3, 5, 2, 4, 1, 3]</li>
+<li>计数数组按照原数组的值作为索引，得到[0, 1, 1, 2, 1, 1]，其中2表示数字3在原数组中出现2次。</li>
+<li>对计数数组中的次数累加作为元素的索引得到[0, 1, 2, 4, 5, 6]其中 4 表示数字3在排序后数组中的第 4 个位置，且当第一个 3 放置在数组中之后，需要减一，以便将第二个 3 放置在数组中第 3 个位置。</li>
+</ul>
+<p><img src="https://jankeyfu-blog.oss-cn-beijing.aliyuncs.com/counting_sort.png" alt="image-20190915163909967"></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#60a0b0;font-style:italic">// CountingSort 计数排序
+</span><span style="color:#60a0b0;font-style:italic"></span><span style="color:#007020;font-weight:bold">func</span> <span style="color:#06287e">CountingSort</span>(s []<span style="color:#902000">int</span>, k <span style="color:#902000">int</span>) []<span style="color:#902000">int</span> {
+	c <span style="color:#666">:=</span> <span style="color:#007020">make</span>([]<span style="color:#902000">int</span>, k) <span style="color:#60a0b0;font-style:italic">// 存储每个数出现的次数
+</span><span style="color:#60a0b0;font-style:italic"></span>	<span style="color:#007020;font-weight:bold">for</span> i <span style="color:#666">:=</span> <span style="color:#007020;font-weight:bold">range</span> s {
+		c[s[i]] = c[s[i]] <span style="color:#666">+</span> <span style="color:#40a070">1</span> <span style="color:#60a0b0;font-style:italic">// 出现次数+1
+</span><span style="color:#60a0b0;font-style:italic"></span>	}
+	<span style="color:#60a0b0;font-style:italic">//整理每个数出现的顺序
+</span><span style="color:#60a0b0;font-style:italic"></span>	<span style="color:#007020;font-weight:bold">for</span> i <span style="color:#666">:=</span> <span style="color:#40a070">1</span>; i &lt; k; i<span style="color:#666">++</span> {
+		c[i] = c[i] <span style="color:#666">+</span> c[i<span style="color:#666">-</span><span style="color:#40a070">1</span>]
+	}
+	b <span style="color:#666">:=</span> <span style="color:#007020">make</span>([]<span style="color:#902000">int</span>, <span style="color:#007020">len</span>(s))
+	<span style="color:#007020;font-weight:bold">for</span> i <span style="color:#666">:=</span> <span style="color:#007020;font-weight:bold">range</span> s {
+		b[c[s[i]]<span style="color:#666">-</span><span style="color:#40a070">1</span>] = s[i] <span style="color:#60a0b0;font-style:italic">// 索引从0开始
+</span><span style="color:#60a0b0;font-style:italic"></span>		c[s[i]]<span style="color:#666">--</span>
+	}
+	<span style="color:#007020;font-weight:bold">return</span> b
+}
+</code></pre></div><h4 id="8-桶排序">8. 桶排序</h4>
+<p>桶排序是通过将数组中的元素按照区间进行划分，放置在不同的桶中，然后再针对每个桶中的元素使用其他排序算法进行排序，最后将所有桶中的元素依次取出的一种排序算法。</p>
+<p>如下图：将原数组分为两个桶，<code>[3, 2, 1]</code> 和 <code>[5, 4]</code> 在分别对两个桶中的元素进行快速排序，得到<code>[1, 2, 3]</code> 和 <code>[4, 5]</code> 最后将每个桶中的元素组合起来得到排序好的数组 <code>[1, 2, 3, 4, 5]</code></p>
+<p><img src="https://jankeyfu-blog.oss-cn-beijing.aliyuncs.com/bucket_sort.png" alt="image-20190915172000705"></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#60a0b0;font-style:italic">// BucketSort 桶排序
+</span><span style="color:#60a0b0;font-style:italic"></span><span style="color:#007020;font-weight:bold">func</span> <span style="color:#06287e">BucketSort</span>(s []<span style="color:#902000">int</span>, bucketsNum <span style="color:#902000">int</span>) []<span style="color:#902000">int</span> {
+	buckets <span style="color:#666">:=</span> <span style="color:#007020">make</span>([][]<span style="color:#902000">int</span>, bucketsNum)
+	<span style="color:#60a0b0;font-style:italic">// 获取数组中的最大值和最小值，以确定如何桶的区间大小
+</span><span style="color:#60a0b0;font-style:italic"></span>	max, min <span style="color:#666">:=</span> math.MinInt32, math.MaxInt32
+	<span style="color:#007020;font-weight:bold">for</span> _, v <span style="color:#666">:=</span> <span style="color:#007020;font-weight:bold">range</span> s {
+		<span style="color:#007020;font-weight:bold">if</span> max &lt; v {
+			max = v
+		}
+		<span style="color:#007020;font-weight:bold">if</span> min &gt; v {
+			min = v
+		}
+	}
+	<span style="color:#60a0b0;font-style:italic">// 将不同的数按照桶的区间落在不同的桶中
+</span><span style="color:#60a0b0;font-style:italic"></span>	<span style="color:#007020;font-weight:bold">for</span> _, v <span style="color:#666">:=</span> <span style="color:#007020;font-weight:bold">range</span> s {
+		id <span style="color:#666">:=</span> <span style="color:#06287e">getBucketID</span>(min, max, bucketsNum, v)
+		<span style="color:#007020;font-weight:bold">if</span> <span style="color:#007020">len</span>(buckets[id]) <span style="color:#666">==</span> <span style="color:#40a070">0</span> {
+			buckets[id] = []<span style="color:#902000">int</span>{v}
+		} <span style="color:#007020;font-weight:bold">else</span> {
+			buckets[id] = <span style="color:#007020">append</span>(buckets[id], v)
+		}
+	}
+	<span style="color:#60a0b0;font-style:italic">// 桶的编号由小到大，其中的数据也是由小到大
+</span><span style="color:#60a0b0;font-style:italic"></span>	ret <span style="color:#666">:=</span> []<span style="color:#902000">int</span>{}
+	<span style="color:#007020;font-weight:bold">for</span> _, bucketList <span style="color:#666">:=</span> <span style="color:#007020;font-weight:bold">range</span> buckets {
+		<span style="color:#60a0b0;font-style:italic">// 针对每个桶中的数据进行快速排序
+</span><span style="color:#60a0b0;font-style:italic"></span>		ret = <span style="color:#007020">append</span>(ret, <span style="color:#06287e">QuickSort</span>(bucketList, <span style="color:#40a070">0</span>, <span style="color:#007020">len</span>(bucketList)<span style="color:#666">-</span><span style="color:#40a070">1</span>)<span style="color:#666">...</span>)
+	}
+	<span style="color:#007020;font-weight:bold">return</span> ret
+}
+
+<span style="color:#60a0b0;font-style:italic">// 判断一个数落在哪个桶中
+</span><span style="color:#60a0b0;font-style:italic"></span><span style="color:#007020;font-weight:bold">func</span> <span style="color:#06287e">getBucketID</span>(min, max, num, key <span style="color:#902000">int</span>) <span style="color:#902000">int</span> {
+	step <span style="color:#666">:=</span> (max<span style="color:#666">-</span>min)<span style="color:#666">/</span>num <span style="color:#666">+</span> <span style="color:#40a070">1</span>
+	<span style="color:#007020;font-weight:bold">return</span> (key <span style="color:#666">-</span> min) <span style="color:#666">/</span> step
+}
+</code></pre></div><h5 id="参考资料">参考资料</h5>
+<ul>
+<li>算法导论</li>
+<li>维基百科</li>
+</ul>
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/sort/" rel="tag">sort</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="Jankeyfu avatar" src="/img/avatar.png" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 Jankeyfu</span>
+	</div>
+	<div class="authorbox__description">
+		某不知名公司的某不知名程序员！
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/book_reading/keyilianxi/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">刻意练习</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/posts/linux/cmd_base/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">Linux 基础命令</p>
+		</a>
+	</div>
+</nav>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/book_reading/keyilianxi/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">刻意练习</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/posts/linux/cmd_base/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">Linux 基础命令</p>
+		</a>
+	</div>
+</nav>
+<div id="git-comments"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+    const gitalk = new Gitalk({
+        clientID: '828d851e2cca8472fff7',
+        clientSecret: '8010aa440c2565f5fd290194be72ed211584a952',
+        repo: 'jankeyfu.github.io',
+        owner: 'jankeyfu',
+        admin: ['jankeyfu'],
+        id: location.pathname,      
+        distractionFreeMode: false  
+    })
+    gitalk.render('git-comments')
+</script>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="http://jankeyfu.github.io/" />
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/db/mysql_query_optimization/">MySQL 查询优化</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/db/mysql_transaction/">MySQL 事务</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/db/mysql_index/">MySQL 索引</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/db/mysql_interview/">MySQL 知识要点</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/linux/cmd_awk/">Linux 命令之 AWK</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/docker/">docker</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/golang/">golang</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/linux/">linux</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E8%AE%BE%E8%AE%A1/">设计</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E9%98%85%E8%AF%BB/">阅读</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/cache/" title="cache">cache (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/channel/" title="channel">channel (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/context/" title="context">context (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/design/" title="design">design (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/docker/" title="docker">docker (2)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/http/" title="http">http (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/interview/" title="interview">interview (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/log/" title="log">log (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/monitor/" title="monitor">monitor (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/mysql/" title="mysql">mysql (5)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/reading/" title="reading">reading (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/redis/" title="redis">redis (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/reflect/" title="reflect">reflect (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/shell/" title="shell">shell (4)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/sort/" title="sort">sort (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/sync/" title="sync">sync (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/thinking/" title="thinking">thinking (1)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/jankeyfu" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 温故知新以为师.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+		<span id="busuanzi_container_site_pv">
+			本站总访问量<span id="busuanzi_value_site_pv"></span>次
+		</span>
+		<span id="busuanzi_container_site_pv">
+			本页总访问量<span id="busuanzi_value_page_pv"></span>次
+		</span>
+		<span id="busuanzi_container_site_uv">
+			本站访客数<span id="busuanzi_value_site_uv"></span>人次
+		</span>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

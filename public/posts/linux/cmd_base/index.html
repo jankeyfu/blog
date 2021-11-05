@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Linux 基础命令 - 温故知新以为师</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="Linux 基础命令" />
+<meta property="og:description" content="对于刚学习开发的同学，了解一些基本的Linux命令还是很有必要的，下面都是都是日常开发过程中使用的基本命令。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://jankeyfu.github.io/posts/linux/cmd_base/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2019-09-26T17:30:41+08:00" />
+<meta property="article:modified_time" content="2020-04-14T22:49:05+08:00" />
+
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-143764367-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+	
+
+<script async src="//cdn.busuanzi.ibruce.info/cdn/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script>
+    $(document).ready(function() {
+        var int = setInterval(fixCount, 100);
+        var busuanziSiteOffset =  1563197709 
+        function fixCount() {
+            if ($("#busuanzi_container_site_pv").css("display") != "none") {
+                clearInterval(int);
+                $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + busuanziSiteOffset);
+            }
+        }
+    });
+</script>
+
+
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="温故知新以为师" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">温故知新以为师</div>
+					<div class="logo__tagline">Keep Learning &amp; Keep Thinking</div>
+				</div>
+		</a>
+	</div>
+		<div class="divider"></div>
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Linux 基础命令</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">Jankeyfu</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2019-09-26T17:30:41&#43;08:00">2019-09-26</time>
+	<time class="meta__text" datetime="2020-04-14T22:49:05&#43;08:00">(最后修改: 2020-04-14)</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">linux</a>
+	</span>
+</div></div>
+		</header>
+		
+<div class="post__toc toc">
+	<div class="toc__title">目录</div>
+	<div class="toc__menu">
+		<nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+	</div>
+</div><div class="content post__content clearfix">
+			<p>对于刚学习开发的同学，了解一些基本的Linux命令还是很有必要的，下面都是都是日常开发过程中使用的基本命令。</p>
+<h4 id="文件目录命令">文件目录命令</h4>
+<p><strong>ls (list directory content) 列出当前目录下的文件和文件夹</strong></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">ls		<span style="color:#60a0b0;font-style:italic">#只展示文件名</span>
+ls -l	<span style="color:#60a0b0;font-style:italic">#展示文件名即其他文件信息，包括权限，日期等</span>
+ls -a	<span style="color:#60a0b0;font-style:italic">#展示隐藏文件</span>
+</code></pre></div><p><strong>cd (change directory) 跳转到指定目录路径</strong></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#007020">cd</span> dir_name <span style="color:#60a0b0;font-style:italic"># 跳转到指定的目录路径下</span>
+~ 			<span style="color:#60a0b0;font-style:italic"># 跳转到用户目录下</span>
+.. 			<span style="color:#60a0b0;font-style:italic"># 跳转到上一级目录</span>
+. 			<span style="color:#60a0b0;font-style:italic"># 当前目录</span>
+</code></pre></div><p><strong>pwd 显示当前目录路径</strong></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#007020">pwd</span>
+
+/Users/xxx
+</code></pre></div><p><strong>cp(copy files)复制文件</strong></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">cp <span style="color:#666">[</span>params<span style="color:#666">]</span> src_file desc_file
+-r <span style="color:#60a0b0;font-style:italic"># 递归复制文件夹中的文件</span>
+-i <span style="color:#60a0b0;font-style:italic"># 如果目标文件存在会提示是否覆盖</span>
+cp file1 file2 dir <span style="color:#60a0b0;font-style:italic"># 将多个文件复制到一个文件夹中</span>
+</code></pre></div><p><strong>mv(move files) 移动文件</strong></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">mv <span style="color:#666">[</span>params<span style="color:#666">]</span> src_file desc_file
+-f <span style="color:#60a0b0;font-style:italic"># 强制移动文件，不提示是否会覆盖目标文件</span>
+-i <span style="color:#60a0b0;font-style:italic"># 如果目标文件存在会提示是否覆盖</span>
+mv file1 file2 dir <span style="color:#60a0b0;font-style:italic"># 将多个文件移动到一个文件夹中</span>
+</code></pre></div><p><strong>rm(remove directory entries) 删除文件</strong></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">rm <span style="color:#666">[</span>params<span style="color:#666">]</span> file
+-r <span style="color:#60a0b0;font-style:italic"># 递归移除目录中的文件</span>
+-f <span style="color:#60a0b0;font-style:italic"># 强制移除文件，不提示</span>
+-i <span style="color:#60a0b0;font-style:italic"># 提示是否移除目标文件</span>
+</code></pre></div><h4 id="内容查看命令">内容查看命令</h4>
+<p><strong>cat(concatenate and print files) 查看文件内容</strong></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">cat <span style="color:#666">[</span>params<span style="color:#666">]</span> file
+-n <span style="color:#60a0b0;font-style:italic"># 输出行号信息</span>
+-e <span style="color:#60a0b0;font-style:italic"># 展示不可打印字符，并将换行符替换为$输出</span>
+</code></pre></div><p><strong>head(display first lines of a file) 展示文件前面内容</strong></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">head <span style="color:#666">[</span>params<span style="color:#666">]</span> file <span style="color:#60a0b0;font-style:italic"># 默认显示文件前十行内容</span>
+-n num <span style="color:#60a0b0;font-style:italic"># 显示前n行</span>
+-c num <span style="color:#60a0b0;font-style:italic"># 显示前n个byte</span>
+</code></pre></div><p><strong>tail(display the last part of a file) 展示文件后面部分内容</strong></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">tail <span style="color:#666">[</span>params<span style="color:#666">]</span> file <span style="color:#60a0b0;font-style:italic"># 默认显示文件倒数十行内容</span>
+-n num	<span style="color:#60a0b0;font-style:italic"># 显示后n行</span>
+-c num	<span style="color:#60a0b0;font-style:italic"># 显示后n个byte</span>
+-f		<span style="color:#60a0b0;font-style:italic"># 动态监听文件内容变化并将内容输出到控制台</span>
+-r		<span style="color:#60a0b0;font-style:italic"># 文件内容倒序输出内容</span>
+</code></pre></div><p><strong>more|less 以翻页的方式展示内容</strong></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">more <span style="color:#666">[</span>params<span style="color:#666">]</span> file
+-n num <span style="color:#60a0b0;font-style:italic"># 每页显示n行</span>
++num   <span style="color:#60a0b0;font-style:italic"># 从第n行展示</span>
+
+<span style="color:#60a0b0;font-style:italic"># 在此模式下的命令</span>
+<span style="color:#60a0b0;font-style:italic"># Enter	向下翻页</span>
+<span style="color:#60a0b0;font-style:italic"># 空格键	向下翻页</span>
+<span style="color:#60a0b0;font-style:italic"># F		向下翻页</span>
+<span style="color:#60a0b0;font-style:italic"># B		向上翻页</span>
+<span style="color:#60a0b0;font-style:italic"># =		显示当前行号信息</span>
+<span style="color:#60a0b0;font-style:italic"># q		退出</span>
+</code></pre></div><h4 id="查找命令">查找命令</h4>
+<p><strong>find 文件查找命令</strong></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">find path -name file_name <span style="color:#60a0b0;font-style:italic"># 查找path路径下名为file_name的文件，文件名称支持*通配符</span>
+</code></pre></div><p><strong>grep 文件内容查找命令</strong></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">grep <span style="color:#666">[</span>params<span style="color:#666">]</span> patten file_name <span style="color:#60a0b0;font-style:italic"># 查找文件中指定的内容所在的那一行</span>
+-n 		<span style="color:#60a0b0;font-style:italic"># 显示查找内容的行号,如果后面加了数字则表示将匹配行上下各n行的内容展示</span>
+-i 		<span style="color:#60a0b0;font-style:italic"># 忽略大小写</span>
+-r dir	<span style="color:#60a0b0;font-style:italic"># 递归查找dir目录下所有文件中与所需查找的内容匹配的行</span>
+</code></pre></div><h4 id="文件权限命令">文件权限命令</h4>
+<p><strong>chmod 修改文件用户权限</strong></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">chmod <span style="color:#40a070">777</span> file <span style="color:#60a0b0;font-style:italic"># 修改文件的权限值，777为最低权限，所有人均可使用，可以改为你想设定的权限值</span>
+chmod -R <span style="color:#40a070">777</span> dir <span style="color:#60a0b0;font-style:italic"># 修改文件夹及其内部所有文件权限</span>
+</code></pre></div><p><strong>chown 修改文件所有者</strong></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">chown user_name file 	<span style="color:#60a0b0;font-style:italic"># 修改文件或者目录下所有文件的所有者</span>
+chown -R user_name dir	<span style="color:#60a0b0;font-style:italic"># 修改文件夹下所有文件的所有者</span>
+chown group_name:user_name file <span style="color:#60a0b0;font-style:italic"># 同时修改文件的所属用户组和用户</span>
+</code></pre></div><p><strong>chgrp 修改文件所属用户组</strong></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">chgrp group_name file	<span style="color:#60a0b0;font-style:italic"># 修改文件所属用户组</span>
+chgrp -R group_name dir	<span style="color:#60a0b0;font-style:italic"># 修改文件夹下所有文件的所属用户组</span>
+</code></pre></div><h4 id="用户相关命令">用户相关命令</h4>
+<p><strong>useradd 新增用户</strong></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">useradd <span style="color:#666">[</span>params<span style="color:#666">]</span> user_name	<span style="color:#60a0b0;font-style:italic"># 创建一个名为user_name的用户</span>
+-u uid			<span style="color:#60a0b0;font-style:italic"># 设定用户ID</span>
+-g group_name	<span style="color:#60a0b0;font-style:italic"># 在某个用户组下创建一个用户</span>
+-c comment		<span style="color:#60a0b0;font-style:italic"># 用户的描述信息</span>
+-e YYYY-MM-DD	<span style="color:#60a0b0;font-style:italic"># 设置用户失效日期，</span>
+</code></pre></div><p><strong>userdel 删除用户</strong></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">userdel <span style="color:#666">[</span>-r<span style="color:#666">]</span> user_name <span style="color:#60a0b0;font-style:italic"># 删除用户，如果使用-r参数，则表示删除用户主文件夹</span>
+</code></pre></div><p><strong>passwd 用户密码修改</strong></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">passwd <span style="color:#666">[</span>param<span style="color:#666">]</span> user_name <span style="color:#60a0b0;font-style:italic"># 修改某个用户的密码,如果不接任何参数则是修改当前账号的密码</span>
+</code></pre></div><p><strong>su 用户身份切换</strong></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">su <span style="color:#666">[</span>param<span style="color:#666">]</span> user_name <span style="color:#60a0b0;font-style:italic"># 切换当前用户</span>
+su - 	<span style="color:#60a0b0;font-style:italic"># 切换当前用户为登录用户</span>
+-c cmd	<span style="color:#60a0b0;font-style:italic"># 以用户的身份执行某个命令</span>
+</code></pre></div>
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/shell/" rel="tag">shell</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="Jankeyfu avatar" src="/img/avatar.png" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 Jankeyfu</span>
+	</div>
+	<div class="authorbox__description">
+		某不知名公司的某不知名程序员！
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/algorithm/sort/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">排序算法集合</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/posts/linux/cmd_advanced/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">Linux 进阶命令</p>
+		</a>
+	</div>
+</nav>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/algorithm/sort/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">排序算法集合</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/posts/linux/cmd_advanced/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">Linux 进阶命令</p>
+		</a>
+	</div>
+</nav>
+<div id="git-comments"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+    const gitalk = new Gitalk({
+        clientID: '828d851e2cca8472fff7',
+        clientSecret: '8010aa440c2565f5fd290194be72ed211584a952',
+        repo: 'jankeyfu.github.io',
+        owner: 'jankeyfu',
+        admin: ['jankeyfu'],
+        id: location.pathname,      
+        distractionFreeMode: false  
+    })
+    gitalk.render('git-comments')
+</script>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="http://jankeyfu.github.io/" />
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/db/mysql_query_optimization/">MySQL 查询优化</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/db/mysql_transaction/">MySQL 事务</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/db/mysql_index/">MySQL 索引</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/db/mysql_interview/">MySQL 知识要点</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/linux/cmd_awk/">Linux 命令之 AWK</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/docker/">docker</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/golang/">golang</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/linux/">linux</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E8%AE%BE%E8%AE%A1/">设计</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E9%98%85%E8%AF%BB/">阅读</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/cache/" title="cache">cache (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/channel/" title="channel">channel (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/context/" title="context">context (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/design/" title="design">design (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/docker/" title="docker">docker (2)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/http/" title="http">http (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/interview/" title="interview">interview (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/log/" title="log">log (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/monitor/" title="monitor">monitor (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/mysql/" title="mysql">mysql (5)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/reading/" title="reading">reading (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/redis/" title="redis">redis (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/reflect/" title="reflect">reflect (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/shell/" title="shell">shell (4)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/sort/" title="sort">sort (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/sync/" title="sync">sync (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/thinking/" title="thinking">thinking (1)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/jankeyfu" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 温故知新以为师.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+		<span id="busuanzi_container_site_pv">
+			本站总访问量<span id="busuanzi_value_site_pv"></span>次
+		</span>
+		<span id="busuanzi_container_site_pv">
+			本页总访问量<span id="busuanzi_value_page_pv"></span>次
+		</span>
+		<span id="busuanzi_container_site_uv">
+			本站访客数<span id="busuanzi_value_site_uv"></span>人次
+		</span>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

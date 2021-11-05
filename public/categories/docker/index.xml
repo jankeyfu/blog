@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>docker on 温故知新以为师</title>
+    <link>http://jankeyfu.github.io/categories/docker/</link>
+    <description>Recent content in docker on 温故知新以为师</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 07 Apr 2020 22:46:53 +0800</lastBuildDate><atom:link href="http://jankeyfu.github.io/categories/docker/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Docker 常用命令</title>
+      <link>http://jankeyfu.github.io/posts/skill/docker_basic_cmd/</link>
+      <pubDate>Tue, 07 Apr 2020 22:46:53 +0800</pubDate>
+      
+      <guid>http://jankeyfu.github.io/posts/skill/docker_basic_cmd/</guid>
+      <description>&lt;p&gt;接下来我将为大家介绍一些 Docker 的常用命令。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Docker基础知识</title>
+      <link>http://jankeyfu.github.io/posts/skill/docker_base/</link>
+      <pubDate>Mon, 06 Apr 2020 16:30:34 +0800</pubDate>
+      
+      <guid>http://jankeyfu.github.io/posts/skill/docker_base/</guid>
+      <description>&lt;p&gt;Docker 是一个用于开发、交付和运行应用程序的开放平台。Docker 将我们的应用与基础架构分开，从而实现软件的快速交付。通过 Docker 可以创建统一的开发环境，让我们更专注于代码的编写，而不必分心于环境的配置问题。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

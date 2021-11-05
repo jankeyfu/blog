@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>数据库 on 温故知新以为师</title>
+    <link>http://jankeyfu.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/</link>
+    <description>Recent content in 数据库 on 温故知新以为师</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 19 Apr 2020 17:53:48 +0800</lastBuildDate><atom:link href="http://jankeyfu.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL 查询优化</title>
+      <link>http://jankeyfu.github.io/posts/db/mysql_query_optimization/</link>
+      <pubDate>Sun, 19 Apr 2020 17:53:48 +0800</pubDate>
+      
+      <guid>http://jankeyfu.github.io/posts/db/mysql_query_optimization/</guid>
+      <description>&lt;p&gt;在日常开发过程中，免不了会遇到程序中出现查询慢的情况，那我们需要怎样做才能让我们的查询更快一步呢？这就需要学习 MySQL 查询优化相关的知识了。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>MySQL 事务</title>
+      <link>http://jankeyfu.github.io/posts/db/mysql_transaction/</link>
+      <pubDate>Sat, 18 Apr 2020 12:49:35 +0800</pubDate>
+      
+      <guid>http://jankeyfu.github.io/posts/db/mysql_transaction/</guid>
+      <description>&lt;p&gt;事务就是一次原子性的 SQL 查询，在一次事务中的多个 SQL 查询，要么全部成功，要么全部不成功。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>MySQL 索引</title>
+      <link>http://jankeyfu.github.io/posts/db/mysql_index/</link>
+      <pubDate>Fri, 17 Apr 2020 21:47:20 +0800</pubDate>
+      
+      <guid>http://jankeyfu.github.io/posts/db/mysql_index/</guid>
+      <description>&lt;p&gt;索引可以让服务器快速定位到表的指定位置，但这并不是索引的唯一作用，根据索引的类型不同，索引还有一些附加的用途，如 B 树索引，由于按照顺序存储数据，所以可用来做&lt;code&gt;ORDER BY&lt;/code&gt; 和 &lt;code&gt;GROUP BY&lt;/code&gt; 操作。因此，索引总结下来有以下三个优点：&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>MySQL 知识要点</title>
+      <link>http://jankeyfu.github.io/posts/db/mysql_interview/</link>
+      <pubDate>Tue, 14 Apr 2020 21:51:50 +0800</pubDate>
+      
+      <guid>http://jankeyfu.github.io/posts/db/mysql_interview/</guid>
+      <description>&lt;p&gt;在日常开发过程中，有很多 MySQL 的基础要点会忽略，此文主要记录一些比较容易忽略的知识要点，或是提供一些常见问题的解决方案。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>MySQL EXPLAIN</title>
+      <link>http://jankeyfu.github.io/posts/db/mysql_explain/</link>
+      <pubDate>Mon, 26 Aug 2019 10:07:21 +0800</pubDate>
+      
+      <guid>http://jankeyfu.github.io/posts/db/mysql_explain/</guid>
+      <description>&lt;p&gt;在日常开发工作中，你是否经常遇到自己写的sql执行时间过长影响系统性能的问题却无从下手？这时候你就需要一个工具，这就是&lt;code&gt;EXPLAIN&lt;/code&gt;命令，它将全面分析我们所编写的sql语句，包括表的查询顺序，索引的使用情况以及预估的涉及数据量大小等等，接下来我们就一起来探索一下，如何分析我们写的sql语句的性能，以便写出更优，执行速度更快的sql吧。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Redis 数据结构 —— 字符串</title>
+      <link>http://jankeyfu.github.io/posts/db/redis_data_struct/</link>
+      <pubDate>Sun, 11 Aug 2019 15:58:49 +0800</pubDate>
+      
+      <guid>http://jankeyfu.github.io/posts/db/redis_data_struct/</guid>
+      <description>&lt;p&gt;redis 是一个基于C语言设计的开源的高性能的内存型数据结构存储系统，它可以用作数据库、缓存和消息中间件等。它支持以下五种数据格式： 字符串（strings）， 散列（hashes）， 列表（lists）， 集合（sets）和有序集合（sorted sets）。今天就从源码的角度分析一下这五种数据格式是怎么实现的。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

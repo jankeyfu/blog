@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>sort on 温故知新以为师</title>
+    <link>http://jankeyfu.github.io/tags/sort/</link>
+    <description>Recent content in sort on 温故知新以为师</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 14 Sep 2019 12:29:17 +0800</lastBuildDate><atom:link href="http://jankeyfu.github.io/tags/sort/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>排序算法集合</title>
+      <link>http://jankeyfu.github.io/posts/algorithm/sort/</link>
+      <pubDate>Sat, 14 Sep 2019 12:29:17 +0800</pubDate>
+      
+      <guid>http://jankeyfu.github.io/posts/algorithm/sort/</guid>
+      <description>&lt;p&gt;排序算法可以说是算法中最基础的，但是一直以来都没有系统地去整理过，而且其中有些细节还是值得好好推敲的，因此把遇到过的排序算法进行整理了一下。目前整理地还不够全面，后续会继续慢慢完善。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
