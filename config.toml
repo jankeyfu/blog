@@ -22,13 +22,14 @@ googleAnalytics = "UA-143764367-1"
   twitter_cards = false
   comments = false
   readmore = true # Show "Read more" button in list if true
-  authorbox = true
+  authorbox = true 
   post_navigation = true
-  post_meta = ["date", "categories"] # Order of post meta information
+  post_meta = ["author","date", "categories"] # Order of post meta information
   busuanzi = true
   busuanzi_site_offset = 1563197709
   toc = true
   dateformat = "2006-01-02"
+  pager = true
 
 [Params.sidebar]
   home = "right"   # Configure layout for home page
@@ -36,6 +37,8 @@ googleAnalytics = "UA-143764367-1"
   single = "right" # Configure layout for single pages
   # Enable widgets in given order
   widgets = ["search", "recent", "categories", "taglist", "social", "languages"]
+[Params.thumbnail]
+  visibility = ["list", "post"]
 
 [Params.widgets]
   recent_num = 5 # Set the number of articles in the "Recent articles" widget
